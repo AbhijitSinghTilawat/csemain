@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Color & animation variables */
+:root {
+  --primary: #6366f1;
+  --primary-weak: #818cf8;
+  --track: #e5e7eb;
+  --bg: #f8fafc;
+  --float-d1: -10px;
+  --float-d2: -15px;
+  --float-d3: -8px;
+  --float-t1: 3s;
+  --float-t2: 4s;
+  --float-t3: 5s;
+  --pulse-t: 4s;
+  --scrollbar-w: 6px;
+}
+
+/* Dark mode fallbacks */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --track: #111827;
+    --bg: #0b1220;
+    --primary: #7c83ff;
+    --primary-weak: #9aa2ff;
+  }
+}
+
+/* Floating keyframe template (parameterised by translate distance via CSS var) */
+@keyframes float-vertical {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(var(--float-distance));
+  }
+}
+
+/* Horizontal micro float for text */
+@keyframes float-horizontal {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+/* Pulse opacity */
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .7;
+  }
+}
+
+/* Scrollbar glow */
+@keyframes scrollbar-glow {
+  0% {
+    background: var(--primary);
+  }
+
+  50% {
+    background: var(--primary-weak);
+  }
+
+  100% {
+    background: var(--primary);
+  }
+}
+
+/* Slide-in */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utility animation classes (use via Tailwind/HTML) */
+.animate-float {
+  --float-distance: var(--float-d1);
+  animation: float-vertical var(--float-t1) ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  --float-distance: var(--float-d2);
+  animation: float-vertical var(--float-t2) ease-in-out infinite;
+}
+
+.animate-float-slow {
+  --float-distance: var(--float-d3);
+  animation: float-vertical var(--float-t3) ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow var(--pulse-t) ease-in-out infinite;
+}
+
+.scroll-text {
+  animation: float-horizontal 3s ease-in-out infinite;
+}
+
+.scroll-anim {
+  animation: slide-in .6s ease-out both;
+}
+
+/* Respect user's motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+  .animate-float,
+  .animate-float-delayed,
+  .animate-float-slow,
+  .animate-pulse-slow,
+  .scroll-text,
+  .scroll-anim {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Hide scrollbar but keep scrolling (cross-browser) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE, Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom thin scrollbar with subtle glow effect */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--track);
+  animation: slide-in .4s ease-out;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: var(--scrollbar-w);
+  height: var(--scrollbar-w);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--track);
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 999px;
+  animation: scrollbar-glow 2s ease-in-out infinite;
+  border: 2px solid transparent;
+  /* keep thumb crisp on dark tracks */
+  background-clip: padding-box;
+}
+
+/* Small accessibility tweak: focus-visible outlines */
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 60%, white);
+  outline-offset: 2px;
+}
+
+/* Utility background for full-page sections */
+.full-page-bg {
+  background-color: var(--bg);
+  min-height: 100vh;
+}
+
+/* Keep animations smooth on devices but avoid heavy paint */
+* {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Slight entrance for cards / sections */
+.card-entrance {
+  transform-origin: top center;
+  will-change: transform, opacity;
+  animation: slide-in .45s ease-out both;
+}
+/* Auto vertical scroll inside home panels */
+.auto-scroll {
+  overflow: hidden;
+  position: relative;
+}
+
+.auto-scroll-content {
+  display: flex;
+  flex-direction: column;
+  animation: scrollLoop 15s linear infinite;
+}
+
+.auto-scroll:hover .auto-scroll-content {
+  animation-play-state: paused; /* remove if you don't want pause */
+}
+
+@keyframes scrollLoop {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
