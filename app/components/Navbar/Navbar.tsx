@@ -218,10 +218,11 @@ export default function Navbar() {
                     DEPARTMENT OF
                   </span>
                 </div>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-2 md:mb-3 tracking-tight leading-tight">
+                <h1 className="pb-2 md:pb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-2 md:mb-3 tracking-tight leading-tight">
                   <span className="hidden md:inline">Computer Science And Engineering</span>
                   <span className="md:hidden">Computer Science<br />And Engineering</span>
                 </h1>
+
                 <div className="space-y-1 md:space-y-2">
                   <p className="text-sm md:text-lg font-semibold text-blue-200 tracking-wide">भारतीय प्रौद्योगिकी संस्थान इंदौर</p>
                   <p className="text-xs md:text-base font-medium text-white/80">Indian Institute of Technology Indore</p>
