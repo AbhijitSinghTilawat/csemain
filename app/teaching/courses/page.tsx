@@ -68,7 +68,7 @@ function CourseTable({
   return (
     <div className="mb-16">
       {/* larger section title */}
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-blue-900 mb-6 border-b-2 border-blue-200 pb-2">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-blue-900 mb-6 border-b-2 border-blue-200 pb-2">
         {title}
       </h2>
 
@@ -132,9 +132,9 @@ export default function CoursesPage() {
     <main className="w-full min-h-screen bg-gray-50">
       {/* increased container width to max-w-7xl */}
      <section className="w-full px-[10%] py-12">
-  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-blue-900 text-center border-b-4 border-blue-300 pb-4 mb-10">
+  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-900 text-center border-b-4 border-blue-300 pb-4 mb-10">
     Courses Offered
-  </h1>
+  </h2>
 
   <div className="mb-8 text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
     <p>

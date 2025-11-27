@@ -94,7 +94,7 @@ export default async function FacultyPage() {
                         key={member.id}
                         className="bg-white rounded-2xl shadow-xl hover:shadow-2xl 
                                    transition duration-500 transform hover:scale-[1.02] 
-                                   p-8 flex flex-col items-center text-center"
+                                   p-8 flex flex-col h-full min-h-[520px] items-center text-center"
                     >
                         {/* Profile Image */}
                         <img
@@ -155,12 +155,12 @@ export default async function FacultyPage() {
                             </p>
                         </div>
 
-                        {/* Button */}
+                        {/* BUTTON — fixed at bottom */}
                         <a
                             href={member.profileUrl || "#"}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-5 bg-indigo-500 text-white py-1.5 px-4 rounded-lg 
+                            className="mt-auto bg-indigo-500 text-white py-1.5 px-4 rounded-lg 
                                        hover:bg-indigo-600 transition text-sm"
                         >
                             View Full Profile

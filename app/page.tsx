@@ -122,52 +122,6 @@ export default function Home() {
         }
       `}</style>
 
-      {/* HERO / Intro */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 25px 25px, currentColor 2%, transparent 0%), 
-                                radial-gradient(circle at 75px 75px, currentColor 2%, transparent 0%)`,
-              backgroundSize: "100px 100px"
-            }}
-          />
-        </div>
-
-        <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-12">
-          <div className="max-w-7xl mx-auto w-full py-12 md:py-16 lg:py-20">
-            <div className="text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-[clamp(96px,12vw,240px)]">
-                  <Image src="/png/cselogo.png" alt="CSE Department Logo" width={1200} height={1200} className="w-full h-auto object-contain animate-float-slow" priority />
-                </div>
-              </div>
-
-              <div className="inline-flex items-center px-4 py-2 bg-blue-600/10 dark:bg-blue-400/10 rounded-full border border-blue-500/30 dark:border-blue-400/30 mb-4">
-                <span className="text-xs sm:text-sm font-semibold text-blue-700 dark:text-blue-300 tracking-wide">
-                  DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
-                </span>
-              </div>
-
-              <h1 className="text-[clamp(1.75rem,4.5vw,3.75rem)] font-bold tracking-tight mb-3">
-                <span className="bg-gradient-to-r from-blue-900 via-blue-700 to-cyan-600 dark:from-blue-100 dark:via-blue-300 dark:to-cyan-200 bg-clip-text text-transparent">
-                  CSE IITI
-                </span>
-              </h1>
-
-              <h2 className="text-[clamp(0.95rem,1.8vw,1.5rem)] text-gray-600 dark:text-gray-300 mb-6 font-medium tracking-wide">
-                भारतीय प्रौद्योगिकी संस्थान इंदौर • Indian Institute of Technology Indore
-              </h2>
-
-              <p className="text-[clamp(0.9rem,1.6vw,1.125rem)] max-w-3xl mx-auto mb-8 leading-relaxed text-gray-700 dark:text-gray-300 font-light">
-                Pioneering excellence in computer science education, research, and innovation. We are committed to shaping the future of technology through cutting-edge research and world-class academic programs.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Marquee */}
       <div className="bg-slate-900 dark:bg-slate-700 text-white py-3 shadow-inner border-y border-blue-500/30">
         <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-12">
@@ -189,40 +143,50 @@ export default function Home() {
       </div>
 
       {/* News Slider */}
-      <section className="py-12 md:py-16 bg-slate-100/50 dark:bg-slate-900/50">
-        <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-12">
-          <div className="max-w-7xl mx-auto w-full">
-            <div className="text-center mb-8">
-              <h2 className="text-[clamp(1.25rem,2.8vw,2.5rem)] font-bold text-gray-900 dark:text-white mb-2">News & Highlights</h2>
-              <p className="text-[clamp(0.9rem,1.4vw,1.125rem)] text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Stay updated with our latest announcements and events.
-              </p>
-            </div>
+<section className="py-12 md:py-16 bg-slate-100/50 dark:bg-slate-900/50">
+  <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-12">
+    <div className="max-w mx-auto w-full">
+      <div className="text-center mb-8">
+        <h2 className="text-[clamp(1.25rem,2.8vw,2.5rem)] font-bold text-gray-900 dark:text-white mb-2">News & Highlights</h2>
+        <p className="text-[clamp(0.9rem,1.4vw,1.125rem)] text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Stay updated with our latest announcements and events.
+        </p>
+      </div>
 
-            <div className="overflow-hidden rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50" ref={emblaRef}>
-              <div className="flex">
-                {slides.map((slide, index) => (
-                  <div className="min-w-full flex-none" key={index}>
-                    <div className="relative w-full h-[240px] sm:h-[300px] md:h-[380px] lg:h-[420px] xl:h-[480px] bg-slate-900/30 dark:bg-black/30 rounded-2xl overflow-hidden flex items-center justify-center">
-                      <Image src={slide.imgSrc} alt={slide.title} fill priority={index === 0} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px" className="rounded-2xl object-cover sm:object-contain object-center" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-2xl" />
-                      <div className="absolute left-4 right-4 bottom-4 text-white">
-                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold drop-shadow">{slide.title}</h3>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+      <div className="overflow-hidden rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50" ref={emblaRef}>
+        <div className="flex">
+          {slides.map((slide, index) => (
+            <div className="min-w-full flex-none" key={index}>
+              {/* Height changed to be responsive and large so image fills nicely */}
+              <div className="relative w-full h-[clamp(360px,55vh,720px)] bg-slate-900/30 dark:bg-black/30 rounded-2xl overflow-hidden flex items-center justify-center">
+                {/* object-cover ensures the image fills the container (cropping if necessary) */}
+                <Image
+                  src={slide.imgSrc}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px"
+                  className="rounded-2xl object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-2xl" />
+                <div className="absolute left-4 right-4 bottom-4 text-white">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold drop-shadow">{slide.title}</h3>
+                </div>
               </div>
             </div>
-
-          </div>
+          ))}
         </div>
-      </section>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
       {/* Academics */}
       <section className="relative w-full bg-transparent py-12 md:py-16">
         <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-12">
-          <div className="max-w-7xl mx-auto w-full pb-12 md:pb-20">
+          <div className="max-w mx-auto w-full pb-12 md:pb-20">
             <div className="text-center mb-10">
               <h2 className="text-[clamp(1.25rem,2.8vw,2.5rem)] font-bold text-gray-900 dark:text-white mb-2">Academics</h2>
             </div>
@@ -259,7 +223,7 @@ export default function Home() {
       {/* Panels area: each panel has super-smooth auto-scroll with duplicated content for seamless looping */}
       <section className="bg-slate-100/50 dark:bg-slate-900/50 py-12 md:py-20 border-t border-gray-200 dark:border-gray-700/50">
         <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-12">
-          <div className="max-w-screen-xl mx-auto w-full px-4 sm:px-0 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="max-w mx-auto w-full px-4 sm:px-0 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
             {/* NEWS */}
             <div className="flex flex-col">

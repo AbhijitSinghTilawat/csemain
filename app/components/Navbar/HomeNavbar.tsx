@@ -1,5 +1,7 @@
 "use client";
+
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Menu, X, ChevronDown, ExternalLink, ChevronRight } from "lucide-react";
@@ -7,7 +9,7 @@ import { Menu, X, ChevronDown, ExternalLink, ChevronRight } from "lucide-react";
 type Batch = { name: string; href: string };
 type Program = { name: string; batches?: Batch[] };
 
-export default function Navbar() {
+export default function HomeNavbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -50,15 +52,14 @@ export default function Navbar() {
         { name: "2018-22", href: "/people/alumni/btech/2018-22" },
         { name: "2019-23", href: "/people/alumni/btech/2019-23" },
         { name: "2020-24", href: "/people/alumni/btech/2020-24" },
-        { name: "2021-25", href: "/people/alumni/btech/2021-25" }
-      ]
+        { name: "2021-25", href: "/people/alumni/btech/2021-25" },
+      ],
     },
     { name: "MTech", batches: [{ name: "2023-25", href: "/people/alumni/mtech" }] },
     { name: "MS", batches: [{ name: "MS Alumni", href: "/people/alumni/ms" }] },
-    { name: "PhD", batches: [{ name: "PhD Alumni", href: "/people/alumni/phd" }] }
+    { name: "PhD", batches: [{ name: "PhD Alumni", href: "/people/alumni/phd" }] },
   ];
 
-  // Admissions already removed in your previous request
   const navItems = [
     { name: "Home", href: "/" },
     {
@@ -76,26 +77,26 @@ export default function Navbar() {
             { name: "2025", href: "/people/btech-students/2025" },
             { name: "2024", href: "/people/btech-students/2024" },
             { name: "2023", href: "/people/btech-students/2023" },
-            { name: "2022", href: "/people/btech-students/2022" }
-          ]
+            { name: "2022", href: "/people/btech-students/2022" },
+          ],
         },
-        
-        { name: "MTech Students", href: "/people/mtech-students",
-           subDropdownItems: [
+        {
+          name: "MTech Students",
+          href: "/people/mtech-students",
+          subDropdownItems: [
             { name: "2025", href: "/people/mtech-students/2025" },
             { name: "2024", href: "/people/mtech-students/2024" },
-          ]
+          ],
         },
-        
         { name: "MS Students", href: "/people/ms-students" },
         { name: "PhD Students", href: "/people/phd-students" },
         {
           name: "Alumni",
           href: "#",
           isAlumni: true,
-          subDropdownItems: alumniPrograms
-        }
-      ]
+          subDropdownItems: alumniPrograms,
+        },
+      ],
     },
     {
       name: "Research",
@@ -109,8 +110,8 @@ export default function Navbar() {
           subDropdownItems: [
             { name: "Research Projects", href: "/research/sponsored-projects/research" },
             { name: "GIAN Projects", href: "/research/sponsored-projects/gian" },
-            { name: "Fellowships", href: "/research/sponsored-projects/fellowships" }
-          ]
+            { name: "Fellowships", href: "/research/sponsored-projects/fellowships" },
+          ],
         },
         {
           name: "Publication",
@@ -120,10 +121,10 @@ export default function Navbar() {
             { name: "Conference", href: "/research/publications/conference" },
             { name: "Patent", href: "/research/publications/patent" },
             { name: "Books", href: "/research/publications/books" },
-            { name: "Book Chapter", href: "/research/publications/book-chapter" }
-          ]
-        }
-      ]
+            { name: "Book Chapter", href: "/research/publications/book-chapter" },
+          ],
+        },
+      ],
     },
     {
       name: "Teaching",
@@ -131,8 +132,8 @@ export default function Navbar() {
       hasDropdown: true,
       dropdownItems: [
         { name: "Courses", href: "/teaching/courses" },
-        { name: "Moodle Login", href: "https://lms.iiti.ac.in/" }
-      ]
+        { name: "Moodle Login", href: "https://lms.iiti.ac.in/" },
+      ],
     },
     {
       name: "Programs",
@@ -142,8 +143,8 @@ export default function Navbar() {
         { name: "BTech", href: "/programs/btech" },
         { name: "MTech", href: "/programs/mtech" },
         { name: "MS", href: "/programs/ms" },
-        { name: "PhD", href: "/programs/phd" }
-      ]
+        { name: "PhD", href: "/programs/phd" },
+      ],
     },
     {
       name: "About us",
@@ -155,8 +156,8 @@ export default function Navbar() {
         { name: "Facilities", href: "/about/facilities" },
         { name: "Achievements", href: "/about/achievements" },
         { name: "Contact us", href: "/about/contact" },
-        { name: "About Indore", href: "/about/indore" }
-      ]
+        { name: "About Indore", href: "/about/indore" },
+      ],
     },
     {
       name: "Join Us",
@@ -168,11 +169,11 @@ export default function Navbar() {
         { name: "Prospective MTech Students", href: "/join/mtech" },
         { name: "Prospective MS Students", href: "/join/ms" },
         { name: "Prospective PhD Students", href: "/join/phd" },
-        { name: "Interns", href: "/join/interns" }
-      ]
+        { name: "Interns", href: "/join/interns" },
+      ],
     },
     { name: "Seminar & Outreach", href: "https://events.cse.iiti.ac.in/" },
-    { name: "How to reach", href: "/contact" }
+    { name: "How to reach", href: "/contact" },
   ];
 
   const quickLinks = [{ name: "IIT Indore", href: "https://www.iiti.ac.in/", icon: <ExternalLink size={14} /> }];
@@ -183,71 +184,69 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white relative overflow-hidden select-none">
-        <div className="absolute inset-0 opacity-10">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 25px 25px, white 2%, transparent 0%),
-                                radial-gradient(circle at 75px 75px, white 2%, transparent 0%)`,
-              backgroundSize: "100px 100px"
-            }}
-          />
-        </div>
+      {/* ===== HERO / TOP HEADER (copied & adapted from your home page) ===== */}
+      <header className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
+  {/* dotted background */}
+  <div className="absolute inset-0 opacity-10 pointer-events-none">
+    <div
+      className="absolute inset-0"
+      style={{
+        backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.08) 2%, transparent 0%),
+                          radial-gradient(circle at 75px 75px, rgba(255,255,255,0.08) 2%, transparent 0%)`,
+        backgroundSize: "100px 100px",
+      }}
+    />
+  </div>
 
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 py-6 md:py-8 relative z-10">
-          <div className="flex flex-col lg:flex-row justify-between items-center lg:items-center space-y-4 lg:space-y-0">
-            <div className="flex items-center space-x-3 md:space-x-6">
-              <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-                <div className=" rounded-xl p-1.5 md:p-2">
-                  <img
-                    src="/png/cselogo.png"
-                    alt="CSE IITI Logo"
-                    className="w-16 h-16 md:w-20 md:h-20 object-contain"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                    }}
-                  />
-                </div>
-              </a>
-
-              <div className="flex flex-col justify-center pb-4 md:pb-6">
-                <div className="mb-2 md:mb-3">
-                  <span className="inline-block px-2 md:px-3 py-0.5 md:py-1 bg-blue-600/20 text-blue-300 rounded-full text-xs md:text-sm font-medium border border-blue-500/30">
-                    DEPARTMENT OF
-                  </span>
-                </div>
-                <h1 className="pb-2 md:pb-3 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-2 md:mb-3 tracking-tight leading-tight">
-                  <span className="hidden md:inline">Computer Science and Engineering</span>
-                  <span className="md:hidden">Computer Science<br />and Engineering</span>
-                </h1>
-
-                <div className="space-y-1 md:space-y-2">
-                  <p className="text-sm md:text-lg font-semibold text-blue-200 tracking-wide">भारतीय प्रौद्योगिकी संस्थान इंदौर</p>
-                  <p className="text-xs md:text-base font-medium text-white/80">Indian Institute of Technology Indore</p>
-                </div>
-              </div>
-            </div>
-            <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-                <div className=" rounded-xl p-1.5 md:p-2">
-                  <img
-                    src="/png/iitlogo.png"
-                    alt="IITI Logo"
-                    className="w-16 h-16 md:w-20 md:h-20 object-contain"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                    }}
-                  />
-                </div>
-              </a>
-
-            {/* Removed "Excellence in Innovation & Research" text per request — no replacement */}
+  {/* Removed bottom padding here */}
+  <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 pt-10 md:pt-16 relative z-10">
+    <div className="max-w-7xl mx-auto w-full">
+      <div className="text-center">
+        <div className="flex justify-center mb-6">
+          <div className="w-[clamp(96px,12vw,220px)]">
+            <Image
+              src="/png/cselogo.png"
+              alt="CSE Department Logo"
+              width={1200}
+              height={1200}
+              className="w-full h-auto object-contain animate-float-slow"
+              priority
+            />
           </div>
         </div>
-      </div>
 
+        <div className="inline-flex items-center px-5 py-2 bg-blue-600/10 rounded-full border border-blue-500/30 mb-4">
+          <span className="text-xs sm:text-sm font-semibold text-blue-200 tracking-wide uppercase">
+            DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
+          </span>
+        </div>
+
+        <h2 className="text-lg md:text-xl text-blue-100 font-medium mb-4">
+          भारतीय प्रौद्योगिकी संस्थान इंदौर • Indian Institute of Technology Indore
+        </h2>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style jsx>{`
+  @keyframes floatSlow {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0px); }
+  }
+  .animate-float-slow {
+    animation: floatSlow 6s ease-in-out infinite;
+  }
+
+  /* Removed the bottom padding override */
+  @media (max-width: 640px) {
+    header { padding-top: 2.5rem; }
+  }
+`}</style>
+
+
+      {/* ===== STICKY NAVBAR (same as your main Navbar) ===== */}
       <nav className="sticky top-0 z-50 transition-all duration-500 bg-gradient-to-r from-blue-900/95 via-blue-800/95 to-blue-900/95 backdrop-blur-lg shadow-xl">
         <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 2xl:px-20">
           <div className="hidden lg:flex items-center justify-between">
@@ -374,7 +373,7 @@ export default function Navbar() {
                               </div>
                             )}
                           </div>
-                        ))}
+                        ))} 
                       </div>
                     </div>
                   )}
@@ -392,6 +391,7 @@ export default function Navbar() {
             </div>
           </div>
 
+          {/* MOBILE */}
           <div className="lg:hidden">
             <div className="flex items-center justify-between px-4 py-3 bg-transparent">
               <div className="flex items-center space-x-2">

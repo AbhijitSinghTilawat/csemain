@@ -201,26 +201,48 @@
   animation: slide-in .45s ease-out both;
 }
 /* Auto vertical scroll inside home panels */
+/* smooth infinite vertical scroll (global) */
+:root { --scroll-duration: 14s; } /* default — smaller = faster */
+
 .auto-scroll {
   overflow: hidden;
   position: relative;
 }
 
-.auto-scroll-content {
+/* moving inner element */
+.auto-scroll-inner {
   display: flex;
   flex-direction: column;
-  animation: scrollLoop 15s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+  animation: smoothLoop var(--scroll-duration) linear infinite;
 }
 
-.auto-scroll:hover .auto-scroll-content {
-  animation-play-state: paused; /* remove if you don't want pause */
+/* pause on hover */
+.auto-scroll:hover .auto-scroll-inner {
+  animation-play-state: paused;
 }
 
-@keyframes scrollLoop {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-50%);
-  }
+/* duplicate blocks */
+.auto-scroll .scroll-block {
+  flex-shrink: 0;
+}
+
+/* seamless loop: translate by 50% because content is duplicated */
+@keyframes smoothLoop {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+/* Fix seam caused by Tailwind's space-y (removes top margin on the duplicated block) */
+.auto-scroll .scroll-block[aria-hidden] ul > * {
+  margin-top: 0 !important;
+}
+
+/* Ensure last-child doesn't add extra bottom spacing */
+.auto-scroll .scroll-block ul > *:last-child { margin-bottom: 0 !important; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .auto-scroll-inner { animation: none !important; }
 }
