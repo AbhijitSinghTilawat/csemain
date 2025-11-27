@@ -212,7 +212,7 @@ export default function Navbar() {
                 </div>
               </a>
 
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-center pb-4 md:pb-6">
                 <div className="mb-2 md:mb-3">
                   <span className="inline-block px-2 md:px-3 py-0.5 md:py-1 bg-blue-600/20 text-blue-300 rounded-full text-xs md:text-sm font-medium border border-blue-500/30">
                     DEPARTMENT OF
