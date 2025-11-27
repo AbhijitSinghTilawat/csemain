@@ -174,8 +174,13 @@ export default function Home() {
           <Marquee speed={55} pauseOnHover gradient={false}>
             {marqueeItems.map((item) => {
               const itemClasses = `mx-6 sm:mx-10 md:mx-16 text-[clamp(0.8rem,1.4vw,1rem)] tracking-wide ${item.isStrong ? "font-semibold" : "font-normal opacity-85"}`;
-              if (item.href) {
-                return <Link key={item.id} href={item.href} className={`${itemClasses} hover:text-blue-300 transition-colors duration-200`}>{item.text}</Link>;
+              const hasHref = "href" in item && typeof (item as any).href === "string";
+              if (hasHref) {
+                return (
+                  <Link key={item.id} href={(item as any).href} className={`${itemClasses} hover:text-blue-300 transition-colors duration-200`}>
+                    {item.text}
+                  </Link>
+                );
               }
               return <span key={item.id} className={itemClasses}>{item.text}</span>;
             })}
@@ -300,35 +305,41 @@ export default function Home() {
                 <div className="auto-scroll-inner">
                   <div className="scroll-block">
                     <ul className="space-y-3">
-                      {eventItems.map((item) => (
-                        <li key={item.id} className="flex items-start space-x-2">
-                          <ChevronRight className="w-4 h-4 text-blue-500 mt-1 flex-shrink-0" />
-                          {item.href ? (
-                            <Link href={item.href} className="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
-                              {item.text}
-                            </Link>
-                          ) : (
-                            <span className="text-sm md:text-base text-gray-700 dark:text-gray-300">{item.text}</span>
-                          )}
-                        </li>
-                      ))}
+                      {eventItems.map((item) => {
+                        const hasHref = "href" in item && typeof (item as any).href === "string";
+                        return (
+                          <li key={item.id} className="flex items-start space-x-2">
+                            <ChevronRight className="w-4 h-4 text-blue-500 mt-1 flex-shrink-0" />
+                            {hasHref ? (
+                              <Link href={(item as any).href} className="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
+                                {item.text}
+                              </Link>
+                            ) : (
+                              <span className="text-sm md:text-base text-gray-700 dark:text-gray-300">{item.text}</span>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
 
                   <div className="scroll-block" aria-hidden>
                     <ul className="space-y-3">
-                      {eventItems.map((item) => (
-                        <li key={`copy-event-${item.id}`} className="flex items-start space-x-2">
-                          <ChevronRight className="w-4 h-4 text-blue-500 mt-1 flex-shrink-0" />
-                          {item.href ? (
-                            <Link href={item.href} className="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
-                              {item.text}
-                            </Link>
-                          ) : (
-                            <span className="text-sm md:text-base text-gray-700 dark:text-gray-300">{item.text}</span>
-                          )}
-                        </li>
-                      ))}
+                      {eventItems.map((item) => {
+                        const hasHref = "href" in item && typeof (item as any).href === "string";
+                        return (
+                          <li key={`copy-event-${item.id}`} className="flex items-start space-x-2">
+                            <ChevronRight className="w-4 h-4 text-blue-500 mt-1 flex-shrink-0" />
+                            {hasHref ? (
+                              <Link href={(item as any).href} className="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
+                                {item.text}
+                              </Link>
+                            ) : (
+                              <span className="text-sm md:text-base text-gray-700 dark:text-gray-300">{item.text}</span>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 </div>
