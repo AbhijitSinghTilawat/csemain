@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,28 @@ export default function HomeNavbar() {
   const [openMobileSub, setOpenMobileSub] = useState<string | null>(null);
   const [openMobileNested, setOpenMobileNested] = useState<string | null>(null);
 
+  // ---- Hover hide-delay logic ----
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const HIDE_DELAY_MS = 300; // increased to 300ms for nested menus
+
+  const clearHideTimer = () => {
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+  };
+
+  const scheduleHideAll = (delay = HIDE_DELAY_MS) => {
+    clearHideTimer();
+    hideTimerRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+      setActiveSubDropdown(null);
+      setActiveProgram(null);
+      hideTimerRef.current = null;
+    }, delay);
+  };
+
+  // Mobile toggles
   const toggleMobileDropdown = (name: string) => {
     setOpenMobileDropdown(openMobileDropdown === name ? null : name);
     setOpenMobileSub(null);
@@ -185,19 +207,19 @@ export default function HomeNavbar() {
     <>
       {/* ===== HERO / TOP HEADER ===== */}
       <header className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute inset-0 opacity-8 pointer-events-none">
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.08) 2%, transparent 0%),
-                                radial-gradient(circle at 75px 75px, rgba(255,255,255,0.08) 2%, transparent 0%)`,
-              backgroundSize: "100px 100px",
+              backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.04) 2%, transparent 0%),
+                                radial-gradient(circle at 75px 75px, rgba(255,255,255,0.03) 2%, transparent 0%)`,
+              backgroundSize: "120px 120px",
             }}
           />
         </div>
 
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 pt-10 md:pt-16 relative z-10">
-          <div className="max-w-7xl mx-auto w-full">
+          <div className="w-full">
             <div className="text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-[clamp(96px,12vw,220px)]">
@@ -212,13 +234,13 @@ export default function HomeNavbar() {
                 </div>
               </div>
 
-              <div className="inline-flex items-center px-5 py-2 bg-blue-600/10 rounded-full border border-blue-500/30 mb-4">
-                <span className="text-xs sm:text-sm font-semibold text-blue-200 tracking-wide uppercase">
+              <div className="inline-flex items-center px-5 py-2 bg-white/6 rounded-full border border-white/10 mb-4">
+                <span className="text-xs sm:text-sm font-semibold text-white/90 tracking-wide uppercase">
                   DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
                 </span>
               </div>
 
-              <h2 className="text-lg md:text-xl text-blue-100 font-medium mb-4">
+              <h2 className="text-lg md:text-xl text-white/90 font-medium mb-4">
                 भारतीय प्रौद्योगिकी संस्थान इंदौर • Indian Institute of Technology Indore
               </h2>
             </div>
@@ -235,220 +257,280 @@ export default function HomeNavbar() {
         .animate-float-slow {
           animation: floatSlow 6s ease-in-out infinite;
         }
-        @media (max-width: 640px) {
-          header { padding-top: 2.5rem; }
-        }
+        /* hide horizontal scrollbar for the nav */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
       {/* ================= NAVBAR (placed below the header) ================= */}
-      {/* Important: overflow-visible so dropdowns can extend outside */}
-      <nav className="sticky top-0 z-50 bg-blue-800 shadow-xl text-white overflow-visible">
-        <div className="w-full px-6 overflow-visible">
-          {/* DESKTOP NAV */}
-          <div className="hidden lg:flex justify-between items-center">
-            <div className="flex flex-1 justify-evenly">
-              {navItems.map((item) => (
-                <div
-                  key={item.name}
-                  className="relative"
-                  onMouseEnter={() => setActiveDropdown(item.name)}
-                  onMouseLeave={() => {
-                    setActiveDropdown(null);
-                    setActiveSubDropdown(null);
-                    setActiveProgram(null);
-                  }}
-                >
-                  {item.hasDropdown ? (
-                    <button
-                      className="px-4 py-4 font-semibold hover:text-white/90 flex items-center gap-1"
-                      onClick={(e) => item.hasDropdown && e.preventDefault()}
-                    >
-                      {item.name}
-                      {item.hasDropdown && <ChevronDown size={14} />}
-                    </button>
-                  ) : (
-                    // Render real link for items without dropdown (fixes Seminar & Outreach, How to reach)
-                    <Link
-                      href={item.href}
-                      target={typeof item.href === "string" && item.href.startsWith("http") ? "_blank" : undefined}
-                      rel={typeof item.href === "string" && item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="px-4 py-4 font-semibold hover:text-white/90 flex items-center gap-1"
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-
-                  {/* --- DROPDOWN PANEL --- */}
-                  {item.hasDropdown && activeDropdown === item.name && item.dropdownItems && (
-                    <div
-                      // ensure this panel is above everything and overflow visible
-                      className="absolute top-full bg-white text-black shadow-xl rounded-md py-2 min-w-[220px]"
-                      style={{ zIndex: 9999, overflow: "visible" }}
-                    >
-                      {item.dropdownItems.map((dItem: AnyItem) => (
-                        <div
-                          key={dItem.name}
-                          className="relative"
-                          onMouseEnter={() => (dItem.subDropdownItems ? setActiveSubDropdown(dItem.name) : null)}
-                          onMouseLeave={() => setActiveSubDropdown(null)}
+      <nav className="sticky top-0 z-50 bg-blue-800 text-white border-b border-blue-700">
+        {/* Make this container full-bleed (no left/right padding) */}
+        <div className="w-full px-0">
+          {/* DESKTOP NAV: full width, items take equal space and wrap when needed */}
+          <div className="hidden lg:flex items-center w-full">
+            <div className="flex w-full flex-wrap">
+              {navItems.map((item) => {
+                const isActive = activeDropdown === item.name;
+                return (
+                  <div
+                    key={item.name}
+                    className="relative flex-1 min-w-[120px] text-center"
+                    onMouseEnter={() => {
+                      clearHideTimer();
+                      setActiveDropdown(item.name);
+                    }}
+                    onMouseLeave={() => {
+                      // schedule a delayed hide so user can move into the dropdown
+                      scheduleHideAll();
+                    }}
+                  >
+                    <div className="inline-block w-full">
+                      {item.hasDropdown ? (
+                        <button
+                          className={`w-full px-4 py-3 font-medium text-[15px] md:text-base rounded-md transition-colors hover:bg-blue-700/40 focus:outline-none flex items-center justify-center gap-2 ${isActive ? "text-sky-300" : "text-white"}`}
+                          onClick={(e) => item.hasDropdown && e.preventDefault()}
                         >
-                          <button
-                            className="flex justify-between w-full px-4 py-2 hover:bg-gray-100 text-left"
-                            onClick={() => {
-                              if (dItem.href) router.push(dItem.href);
-                            }}
-                          >
-                            {dItem.name}
-                            {dItem.subDropdownItems && <ChevronRight size={14} />}
-                          </button>
-
-                          {/* SUB DROPDOWN */}
-                          {dItem.subDropdownItems && activeSubDropdown === dItem.name && (
-                            <div
-                              className="absolute left-full top-0 bg-white shadow-xl rounded-md py-2 min-w-[240px]"
-                              style={{ zIndex: 10000, overflow: "visible" }}
-                            >
-                              {dItem.subDropdownItems.map((sItem: AnyItem) => {
-                                // Program with batches (nested mega)
-                                if (sItem.subDropdownItems) {
-                                  return (
-                                    <div key={sItem.name} onMouseEnter={() => setActiveProgram(sItem.name)} onMouseLeave={() => setActiveProgram(null)}>
-                                      <div className="flex justify-between px-4 py-2 hover:bg-gray-100">
-                                        {sItem.name}
-                                        <ChevronRight size={14} />
-                                      </div>
-
-                                      {/* nested mega panel (batches) */}
-                                      {activeProgram === sItem.name && (
-                                        <div
-                                          className="absolute left-full top-0 bg-white shadow-xl rounded-md p-3 grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto"
-                                          style={{ zIndex: 10001, minWidth: 360 }}
-                                        >
-                                          {sItem.subDropdownItems.map((batch: AnyItem) => (
-                                            <Link
-                                              key={batch.name}
-                                              href={batch.href}
-                                              className="px-2 py-2 bg-gray-50 hover:bg-gray-100 rounded text-sm text-center whitespace-nowrap"
-                                              onClick={() => {
-                                                setActiveDropdown(null);
-                                                setActiveSubDropdown(null);
-                                                setActiveProgram(null);
-                                              }}
-                                            >
-                                              {batch.name}
-                                            </Link>
-                                          ))}
-                                        </div>
-                                      )}
-                                    </div>
-                                  );
-                                }
-
-                                // Simple link
-                                return (
-                                  <Link key={sItem.name} href={sItem.href} className="block px-4 py-2 hover:bg-gray-100">
-                                    {sItem.name}
-                                  </Link>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                          <span>{item.name}</span>
+                          {item.hasDropdown && <ChevronDown size={14} />}
+                        </button>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          target={typeof item.href === "string" && item.href.startsWith("http") ? "_blank" : undefined}
+                          rel={typeof item.href === "string" && item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className="inline-block w-full px-4 py-3 font-medium text-[15px] md:text-base rounded-md hover:bg-white/6 transition-colors text-white text-center"
+                          onMouseEnter={() => clearHideTimer()}
+                          onMouseLeave={() => scheduleHideAll()}
+                          onClick={() => {
+                            // close menu after navigation
+                            setActiveDropdown(null);
+                            setActiveSubDropdown(null);
+                            setActiveProgram(null);
+                          }}
+                        >
+                          {item.name}
+                        </Link>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
 
-            {/* Search icon */}
-            <button className="px-4">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 01-14 0z" />
-              </svg>
-            </button>
-          </div>
+                    {/* --- DROPDOWN PANEL --- */}
+                    {item.hasDropdown && item.dropdownItems && (
+                      <div
+                        onMouseEnter={() => {
+                          clearHideTimer();
+                          setActiveDropdown(item.name);
+                        }}
+                        onMouseLeave={() => scheduleHideAll()}
+                        className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-3 rounded-2xl shadow-lg border bg-white/95 backdrop-blur-sm text-slate-800 min-w-[220px] transition-all duration-200 ease-out ${isActive ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}
+                        style={{ zIndex: 9999, overflow: 'visible' }}
+                      >
+                        <div className="p-2">
+                          {item.dropdownItems.map((dItem: AnyItem) => {
+                            const isSubActive = activeSubDropdown === dItem.name;
+                            return (
+                              <div
+                                key={dItem.name}
+                                className="relative rounded-md"
+                                onMouseEnter={() => {
+                                  clearHideTimer();
+                                  if (dItem.subDropdownItems) setActiveSubDropdown(dItem.name);
+                                }}
+                                onMouseLeave={() => {
+                                  scheduleHideAll();
+                                }}
+                              >
+                                <button
+                                  className="flex justify-between items-center w-full px-3 py-2 rounded-md hover:bg-slate-50 text-left text-[14px]"
+                                  onClick={() => {
+                                    if (dItem.href) {
+                                      // if this dropdown item has a direct href, navigate
+                                      router.push(dItem.href);
+                                      setActiveDropdown(null);
+                                      setActiveSubDropdown(null);
+                                      setActiveProgram(null);
+                                    }
+                                  }}
+                                >
+                                  <span className="truncate">{dItem.name}</span>
+                                  {dItem.subDropdownItems && <ChevronRight size={14} />}
+                                </button>
 
-          {/* MOBILE NAV */}
-          <div className="lg:hidden py-3 flex justify-between">
-            <span className="font-bold text-lg">Menu</span>
-            <button onClick={() => setIsOpen(!isOpen)} aria-label="toggle mobile menu">
-              {isOpen ? <X size={26} /> : <Menu size={26} />}
-            </button>
-          </div>
+                                {/* SUB DROPDOWN */}
+                                {dItem.subDropdownItems && (
+                                  <div
+                                    onMouseEnter={() => {
+                                      clearHideTimer();
+                                      setActiveSubDropdown(dItem.name);
+                                    }}
+                                    onMouseLeave={() => scheduleHideAll()}
+                                    className={`absolute left-full top-0 mt-0 rounded-2xl shadow-lg border bg-white/95 backdrop-blur-sm min-w-[240px] transform origin-left transition-all duration-180 ease-out ${isSubActive ? 'opacity-100 scale-100 translate-x-0 pointer-events-auto' : 'opacity-0 scale-95 -translate-x-2 pointer-events-none'}`}
+                                    style={{ zIndex: 10000 }}
+                                  >
+                                    <div className="p-3">
+                                      {dItem.subDropdownItems.map((sItem: AnyItem) => {
+                                        if (sItem.subDropdownItems) {
+                                          const isProg = activeProgram === sItem.name;
+                                          return (
+                                            <div
+                                              key={sItem.name}
+                                              className="relative"
+                                              onMouseEnter={() => {
+                                                clearHideTimer();
+                                                setActiveProgram(sItem.name);
+                                              }}
+                                              onMouseLeave={() => scheduleHideAll()}
+                                            >
+                                              <div className="flex justify-between items-center px-3 py-2 rounded-md hover:bg-slate-50 text-[14px]">
+                                                <span>{sItem.name}</span>
+                                                <ChevronRight size={14} />
+                                              </div>
 
-          {isOpen && (
-            <div className="lg:hidden space-y-2 pb-4">
-              {navItems.map((item) => (
-                <div key={item.name}>
-                  {!item.hasDropdown ? (
-                    <Link href={item.href} className="block px-4 py-2 bg-blue-700 rounded" onClick={() => setIsOpen(false)}>
-                      {item.name}
-                    </Link>
-                  ) : (
-                    <>
-                      <button className="w-full px-4 py-2 bg-blue-700 rounded flex justify-between" onClick={() => toggleMobileDropdown(item.name)}>
-                        {item.name}
-                        <ChevronDown className={`transform ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
-                      </button>
-
-                      {openMobileDropdown === item.name && (
-                        <div className="pl-4 space-y-2">
-                          {item.dropdownItems.map((dItem: AnyItem) => (
-                            <div key={dItem.name}>
-                              {!dItem.subDropdownItems ? (
-                                <Link href={dItem.href} className="block px-4 py-2 bg-blue-600 rounded" onClick={() => setIsOpen(false)}>
-                                  {dItem.name}
-                                </Link>
-                              ) : (
-                                <>
-                                  <button className="w-full px-4 py-2 bg-blue-600 rounded flex justify-between" onClick={() => toggleMobileSub(dItem.name)}>
-                                    {dItem.name}
-                                    <ChevronDown className={`transform ${openMobileSub === dItem.name ? "rotate-180" : ""}`} />
-                                  </button>
-
-                                  {openMobileSub === dItem.name && (
-                                    <div className="pl-4 space-y-2">
-                                      {dItem.subDropdownItems.map((sItem: AnyItem) => (
-                                        <div key={sItem.name}>
-                                          {!sItem.subDropdownItems ? (
-                                            <Link href={sItem.href} className="block px-4 py-2 bg-blue-500 rounded" onClick={() => setIsOpen(false)}>
-                                              {sItem.name}
-                                            </Link>
-                                          ) : (
-                                            <>
-                                              <button className="w-full px-4 py-2 bg-blue-500 rounded flex justify-between" onClick={() => toggleMobileNested(`${item.name}:${dItem.name}:${sItem.name}`)}>
-                                                {sItem.name}
-                                                <ChevronDown className={`transform ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "rotate-180" : ""}`} />
-                                              </button>
-
-                                              {openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` && (
-                                                <div className="pl-4 grid grid-cols-2 gap-2">
+                                              {/* NESTED PROGRAM GRID (e.g., Alumni -> BTech batches) */}
+                                              {isProg && (
+                                                <div
+                                                  onMouseEnter={() => {
+                                                    clearHideTimer();
+                                                    setActiveProgram(sItem.name);
+                                                  }}
+                                                  onMouseLeave={() => scheduleHideAll()}
+                                                  className="absolute left-full top-0 mt-0 rounded-2xl shadow-lg border bg-white/95 backdrop-blur-sm p-3 grid grid-cols-2 gap-2 max-h-[420px] overflow-y-auto min-w-[320px] z-50"
+                                                >
                                                   {sItem.subDropdownItems.map((batch: AnyItem) => (
-                                                    <Link key={batch.name} href={batch.href} className="block px-3 py-2 bg-blue-400 rounded text-center" onClick={() => setIsOpen(false)}>
+                                                    <Link
+                                                      key={batch.name}
+                                                      href={batch.href}
+                                                      className="px-2 py-2 bg-slate-50 hover:bg-slate-100 rounded text-[14px] text-center whitespace-nowrap"
+                                                      onMouseDown={() => {
+                                                        // prevent hide timer while pressing
+                                                        clearHideTimer();
+                                                      }}
+                                                      onClick={() => {
+                                                        // navigate (Link will do it) and close menus
+                                                        setActiveDropdown(null);
+                                                        setActiveSubDropdown(null);
+                                                        setActiveProgram(null);
+                                                      }}
+                                                    >
                                                       {batch.name}
                                                     </Link>
                                                   ))}
                                                 </div>
                                               )}
-                                            </>
-                                          )}
-                                        </div>
-                                      ))}
+                                            </div>
+                                          );
+                                        }
+
+                                        // plain sub-item (e.g., "MS", "PhD") — make it reliably clickable
+                                        return (
+                                          <Link
+                                            key={sItem.name}
+                                            href={sItem.href}
+                                            className="block px-3 py-2 rounded-md hover:bg-slate-50 text-[14px]"
+                                            onMouseEnter={() => clearHideTimer()}
+                                            onMouseLeave={() => scheduleHideAll()}
+                                            onMouseDown={() => clearHideTimer()} // ensure mouse-down clears timer before click
+                                            onClick={() => {
+                                              // close menus after navigation
+                                              setActiveDropdown(null);
+                                              setActiveSubDropdown(null);
+                                              setActiveProgram(null);
+                                            }}
+                                          >
+                                            {sItem.name}
+                                          </Link>
+                                        );
+                                      })}
                                     </div>
-                                  )}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* MOBILE NAV */}
+          <div className="lg:hidden py-3 flex justify-between items-center px-4">
+            <span className="font-semibold text-lg">Menu</span>
+            <button onClick={() => setIsOpen(!isOpen)} aria-label="toggle mobile menu" className="p-2 rounded-md hover:bg-white/6 transition">
+              {isOpen ? <X size={26} /> : <Menu size={26} />}
+            </button>
+          </div>
+
+          <div className="lg:hidden">
+            <div className={`overflow-hidden transition-all duration-300 ease-[cubic-bezier(.2,.9,.2,1)] ${isOpen ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="p-4 space-y-3">
+                {navItems.map((item) => (
+                  <div key={item.name}>
+                    {!item.hasDropdown ? (
+                      <Link href={item.href} className="block px-4 py-3 rounded-lg bg-slate-100/50 text-slate-800 font-medium text-[15px]" onClick={() => setIsOpen(false)}>
+                        {item.name}
+                      </Link>
+                    ) : (
+                      <>
+                        <button className="w-full px-4 py-3 rounded-lg bg-slate-100/40 flex justify-between items-center font-medium text-[15px]" onClick={() => toggleMobileDropdown(item.name)}>
+                          {item.name}
+                          <ChevronDown className={`transform transition-transform ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
+                        </button>
+
+                        <div className={`pl-4 overflow-hidden transition-all duration-250 ${openMobileDropdown === item.name ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                          {item.dropdownItems.map((dItem: AnyItem) => (
+                            <div key={dItem.name} className="pt-2">
+                              {!dItem.subDropdownItems ? (
+                                <Link href={dItem.href} className="block px-4 py-2 rounded-md bg-slate-100/30 text-[14px]" onClick={() => setIsOpen(false)}>
+                                  {dItem.name}
+                                </Link>
+                              ) : (
+                                <>
+                                  <button className="w-full px-4 py-2 rounded-md bg-slate-100/20 flex justify-between items-center text-[14px]" onClick={() => toggleMobileSub(dItem.name)}>
+                                    {dItem.name}
+                                    <ChevronDown className={`transform transition-transform ${openMobileSub === dItem.name ? "rotate-180" : ""}`} />
+                                  </button>
+
+                                  <div className={`pl-4 overflow-hidden transition-all duration-250 ${openMobileSub === dItem.name ? 'max-h-[720px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                    {dItem.subDropdownItems.map((sItem: AnyItem) => (
+                                      <div key={sItem.name} className="pt-2">
+                                        {!sItem.subDropdownItems ? (
+                                          <Link href={sItem.href} className="block px-4 py-2 rounded-md bg-slate-100/10 text-[14px]" onClick={() => setIsOpen(false)}>
+                                            {sItem.name}
+                                          </Link>
+                                        ) : (
+                                          <>
+                                            <button className="w-full px-4 py-2 rounded-md bg-slate-100/10 flex justify-between items-center text-[14px]" onClick={() => toggleMobileNested(`${item.name}:${dItem.name}:${sItem.name}`)}>
+                                              {sItem.name}
+                                              <ChevronDown className={`transform transition-transform ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "rotate-180" : ""}`} />
+                                            </button>
+
+                                            <div className={`pl-4 grid grid-cols-2 gap-2 pt-2 overflow-hidden transition-all duration-250 ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                              {sItem.subDropdownItems.map((batch: AnyItem) => (
+                                                <Link key={batch.name} href={batch.href} className="block px-3 py-2 rounded-md bg-slate-100/10 text-center text-[14px]" onClick={() => setIsOpen(false)}>
+                                                  {batch.name}
+                                                </Link>
+                                              ))}
+                                            </div>
+                                          </>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
                                 </>
                               )}
                             </div>
                           ))}
                         </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              ))}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </nav>
     </>
