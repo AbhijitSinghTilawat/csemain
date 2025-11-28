@@ -108,26 +108,24 @@ export default function BookChaptersPage() {
                         >
                             <div className="flex items-start">
 
-                                <span className="text-xl font-bold text-blue-800 mr-4">
-                                    {index + 1}.
-                                </span>
+                                
 
 
-                                <div className="text-gray-700 leading-relaxed flex-1">
+                                <div className="px-6 py-4 text-xl text-gray-700 leading-relaxed flex-1">
                                     {/* 1. लेखक (Authors) */}
                                     <span className="text-gray-600" dangerouslySetInnerHTML={{ __html: authors }} />
 
 
                                     {title && (
                                         <span
-                                            className="font-semibold text-blue-900"
+                                            className="text-xl font-semibold text-blue-900"
                                             dangerouslySetInnerHTML={{ __html: `"${title}"` }}
                                         />
                                     )}
 
 
                                     {source && (
-                                        <span className="text-gray-600" dangerouslySetInnerHTML={{ __html: source }} />
+                                        <span className=" text-xl text-gray-600" dangerouslySetInnerHTML={{ __html: source }} />
                                     )}
                                 </div>
 

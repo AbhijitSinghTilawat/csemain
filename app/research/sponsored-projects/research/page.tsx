@@ -170,41 +170,39 @@ export default function SponsoredProjectsPage() {
                     >
 
                         <div className="flex items-start">
-                            <span className="text-2xl font-bold text-blue-800 mr-4">
-                                {index + 1}.
-                            </span>
-                            <h2 className="text-xl font-semibold text-blue-800 mb-4 flex-1">
+                          
+                            <h2 className="text-2xl font-semibold text-blue-800 mb-4 flex-1">
                                 {project.title}
                             </h2>
                         </div>
 
 
                         <div className="pl-10 space-y-2">
-                            <p className="text-gray-700">
-                                <strong className="font-medium text-gray-900">
+                            <p className="text-xl text-gray-700">
+                                <strong className="text-xl font-medium text-gray-900">
                                     Project Investigator:
                                 </strong> {project.pi}
                             </p>
 
 
                             {project.agency && (
-                                <p className="text-gray-700">
-                                    <strong className="font-medium text-gray-900">
+                                <p className="text-xl text-gray-700">
+                                    <strong className="text-xl font-medium text-gray-900">
                                         Sponsoring Agency:
                                     </strong> {project.agency}
                                 </p>
                             )}
 
-                            <p className="text-gray-700">
-                                <strong className="font-medium text-gray-900">
+                            <p className="text-xl text-gray-700">
+                                <strong className="text-xl font-medium text-gray-900">
                                     Duration:
                                 </strong> {project.duration}
                             </p>
 
 
                             {project.funding && (
-                                <p className="text-gray-700">
-                                    <strong className="font-medium text-gray-900">
+                                <p className="text-xl text-gray-700">
+                                    <strong className="text-xl font-medium text-gray-900">
                                         Funding Amount:
                                     </strong> {project.funding}
                                 </p>

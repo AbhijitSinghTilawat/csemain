@@ -5,16 +5,13 @@ export default async function FormerFacultyPage() { // 👈 पेज का न
     const formerFacultyMembers = await getFormerFacultyMembers();  
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen">
-            <div className="container mx-auto">
+        <div className="bg-gray-50 min-h-screen">
+            <div className="w-full">
                 <h1 className="text-4xl font-extrabold text-gray-900 border-b-4 border-indigo-600 pb-2 mb-8">
                     🎓 Former Faculty Members {/* 👈 टाइटल बदला */}
                 </h1>
-                <p className="text-lg text-gray-700 mb-10">
-                    Our department's esteemed former faculty members. {/* 👈 टेक्स्ट बदला */}
-                </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
                     {formerFacultyMembers.map((member) => ( // 👈 नया वैरिएबल
                         <div
                             key={member.id}

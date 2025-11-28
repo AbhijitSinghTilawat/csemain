@@ -1,65 +1,46 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Menu, X, ChevronDown, ExternalLink, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
-type Batch = { name: string; href: string };
-type Program = { name: string; batches?: Batch[] };
+type AnyItem = any;
 
-export default function Navbar() {
+export default function HomeNavbar() {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [activeSubDropdown, setActiveSubDropdown] = useState<string | null>(null);
-  const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null);
-  const [openMobileSubDropdown, setOpenMobileSubDropdown] = useState<string | null>(null);
-  const [selectedAlumniProgram, setSelectedAlumniProgram] = useState<string | null>(null);
 
-  const handleMobileDropdown = (itemName: string) => {
-    if (openMobileDropdown === itemName) {
-      setOpenMobileDropdown(null);
-      setOpenMobileSubDropdown(null);
-    } else {
-      setOpenMobileDropdown(itemName);
-      setOpenMobileSubDropdown(null);
-    }
+  // UI state
+  const [isOpen, setIsOpen] = useState(false); // mobile main menu
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null); // desktop top-level dropdown hover
+  const [activeSubDropdown, setActiveSubDropdown] = useState<string | null>(null); // desktop first-level sub hover
+  const [activeProgram, setActiveProgram] = useState<string | null>(null); // desktop program hover (BTech/MTech -> show batches)
+
+  const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null); // mobile top-level dropdown (People / Research / ...)
+  const [openMobileSub, setOpenMobileSub] = useState<string | null>(null); // mobile sub-dropdown under a top-level item (e.g., under People -> Alumni or BTech Students)
+  const [openMobileNested, setOpenMobileNested] = useState<string | null>(null); // mobile nested key for program batches (e.g., "People:Alumni:BTech")
+
+  // Helpers for mobile toggles
+  const toggleMobileDropdown = (name: string) => {
+    setOpenMobileDropdown((prev) => (prev === name ? null : name));
+    // collapse lower-level when switching top-level
+    setOpenMobileSub(null);
+    setOpenMobileNested(null);
   };
 
-  const handleMobileSubDropdown = (itemName: string) => {
-    if (openMobileSubDropdown === itemName) {
-      setOpenMobileSubDropdown(null);
-    } else {
-      setOpenMobileSubDropdown(itemName);
-    }
+  const toggleMobileSub = (name: string) => {
+    setOpenMobileSub((prev) => (prev === name ? null : name));
+    // collapse nested when switching sub
+    setOpenMobileNested(null);
   };
 
-  const alumniPrograms: Program[] = [
-    {
-      name: "BTech",
-      batches: [
-        { name: "2009-13", href: "/people/alumni/btech/2009-13" },
-        { name: "2010-14", href: "/people/alumni/btech/2010-14" },
-        { name: "2011-15", href: "/people/alumni/btech/2011-15" },
-        { name: "2012-16", href: "/people/alumni/btech/2012-16" },
-        { name: "2013-17", href: "/people/alumni/btech/2013-17" },
-        { name: "2014-18", href: "/people/alumni/btech/2014-18" },
-        { name: "2015-19", href: "/people/alumni/btech/2015-19" },
-        { name: "2016-20", href: "/people/alumni/btech/2016-20" },
-        { name: "2017-21", href: "/people/alumni/btech/2017-21" },
-        { name: "2018-22", href: "/people/alumni/btech/2018-22" },
-        { name: "2019-23", href: "/people/alumni/btech/2019-23" },
-        { name: "2020-24", href: "/people/alumni/btech/2020-24" },
-        { name: "2021-25", href: "/people/alumni/btech/2021-25" }
-      ]
-    },
-    { name: "MTech", batches: [{ name: "2023-25", href: "/people/alumni/mtech" }] },
-    { name: "MS", batches: [{ name: "MS Alumni", href: "/people/alumni/ms" }] },
-    { name: "PhD", batches: [{ name: "PhD Alumni", href: "/people/alumni/phd" }] }
-  ];
+  const toggleMobileNested = (key: string) => {
+    setOpenMobileNested((prev) => (prev === key ? null : key));
+  };
 
-  // Admissions already removed in your previous request
-  const navItems = [
+  // Navigation data (Alumni has nested BTech (batches) and MTech (single batch))
+  const navItems: AnyItem[] = [
     { name: "Home", href: "/" },
     {
       name: "People",
@@ -79,21 +60,45 @@ export default function Navbar() {
             { name: "2022", href: "/people/btech-students/2022" }
           ]
         },
-        
-        { name: "MTech Students", href: "/people/mtech-students",
-           subDropdownItems: [
+        {
+          name: "MTech Students",
+          href: "/people/mtech-students",
+          subDropdownItems: [
             { name: "2025", href: "/people/mtech-students/2025" },
-            { name: "2024", href: "/people/mtech-students/2024" },
+            { name: "2024", href: "/people/mtech-students/2024" }
           ]
         },
-        
         { name: "MS Students", href: "/people/ms-students" },
         { name: "PhD Students", href: "/people/phd-students" },
         {
           name: "Alumni",
           href: "#",
-          isAlumni: true,
-          subDropdownItems: alumniPrograms
+          subDropdownItems: [
+            {
+              name: "BTech",
+              subDropdownItems: [
+                { name: "2009-13", href: "/people/alumni/btech/2009-13" },
+                { name: "2010-14", href: "/people/alumni/btech/2010-14" },
+                { name: "2011-15", href: "/people/alumni/btech/2011-15" },
+                { name: "2012-16", href: "/people/alumni/btech/2012-16" },
+                { name: "2013-17", href: "/people/alumni/btech/2013-17" },
+                { name: "2014-18", href: "/people/alumni/btech/2014-18" },
+                { name: "2015-19", href: "/people/alumni/btech/2015-19" },
+                { name: "2016-20", href: "/people/alumni/btech/2016-20" },
+                { name: "2017-21", href: "/people/alumni/btech/2017-21" },
+                { name: "2018-22", href: "/people/alumni/btech/2018-22" },
+                { name: "2019-23", href: "/people/alumni/btech/2019-23" },
+                { name: "2020-24", href: "/people/alumni/btech/2020-24" },
+                { name: "2021-25", href: "/people/alumni/btech/2021-25" }
+              ]
+            },
+            {
+              name: "MTech",
+              subDropdownItems: [{ name: "2023-25", href: "/people/alumni/mtech" }]
+            },
+            { name: "MS", href: "/people/alumni/ms" },
+            { name: "PhD", href: "/people/alumni/phd" }
+          ]
         }
       ]
     },
@@ -177,20 +182,17 @@ export default function Navbar() {
 
   const quickLinks = [{ name: "IIT Indore", href: "https://www.iiti.ac.in/", icon: <ExternalLink size={14} /> }];
 
-  const isAlumniActive = (itemName: string) => {
-    return openMobileSubDropdown === itemName || openMobileSubDropdown?.startsWith(`${itemName}:`);
-  };
-
   return (
     <>
+      {/* header/top brand */}
       <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white relative overflow-hidden select-none">
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `radial-gradient(circle at 25px 25px, white 2%, transparent 0%),
-                                radial-gradient(circle at 75px 75px, white 2%, transparent 0%)`,
-              backgroundSize: "100px 100px"
+              backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.08) 2%, transparent 0%),
+                                radial-gradient(circle at 75px 75px, rgba(255,255,255,0.08) 2%, transparent 0%)`,
+              backgroundSize: "100px 100px",
             }}
           />
         </div>
@@ -199,15 +201,19 @@ export default function Navbar() {
           <div className="flex flex-col lg:flex-row justify-between items-center lg:items-center space-y-4 lg:space-y-0">
             <div className="flex items-center space-x-3 md:space-x-6">
               <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-                <div className=" rounded-xl p-1.5 md:p-2">
-                  <img
+                <div className="rounded-xl p-1.5 md:p-2">
+                  {/* Enlarged CSE logo - uses next/image for better optimization */}
+                  <Image
                     src="/png/cselogo.png"
                     alt="CSE IITI Logo"
-                    className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                    width={340}
+                    height={340}
+                    className="w-32 h-32 md:w-44 md:h-44 object-contain"
                     onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
+                      // next/image doesn't allow direct onError manipulation in the same way as <img>,
+                      // but keeping this for parity if switching to <img> is desired.
                     }}
+                    priority
                   />
                 </div>
               </a>
@@ -229,27 +235,35 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
-            <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-                <div className=" rounded-xl p-1.5 md:p-2">
-                  <img
-                    src="/png/iitlogo.png"
-                    alt="IITI Logo"
-                    className="w-16 h-16 md:w-20 md:h-20 object-contain"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                    }}
-                  />
-                </div>
-              </a>
 
-            {/* Removed "Excellence in Innovation & Research" text per request — no replacement */}
+            {/* SECOND LOGO - hidden on small screens (mobile) */}
+            <a
+              href="https://www.iiti.ac.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0 hidden md:block"
+            >
+              <div className="rounded-xl p-1.5 md:p-2">
+                {/* Keep as <img> so hiding with tailwind behaves predictably for very small screens */}
+                <img
+                  src="/png/iitlogo.png"
+                  alt="IITI Logo"
+                  className="w-24 h-24 md:w-36 md:h-36 object-contain"
+                  onError={(e) => {
+                    const t = e.target as HTMLImageElement;
+                    t.style.display = "none";
+                  }}
+                />
+              </div>
+            </a>
           </div>
         </div>
       </div>
 
+      {/* navbar */}
       <nav className="sticky top-0 z-50 transition-all duration-500 bg-gradient-to-r from-blue-900/95 via-blue-800/95 to-blue-900/95 backdrop-blur-lg shadow-xl">
         <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 2xl:px-20">
+          {/* Desktop */}
           <div className="hidden lg:flex items-center justify-between">
             <div className="flex items-center flex-1 justify-evenly">
               {navItems.map((item) => (
@@ -258,16 +272,16 @@ export default function Navbar() {
                   className="relative group"
                   onMouseEnter={() => setActiveDropdown(item.name)}
                   onMouseLeave={() => {
-                    setActiveDropdown(null);
+                    setActiveDropdown((prev) => (prev === item.name ? null : prev));
                     setActiveSubDropdown(null);
-                    setSelectedAlumniProgram(null);
+                    setActiveProgram(null);
                   }}
                 >
                   <a
                     href={item.href}
                     className="relative px-3 xl:px-4 2xl:px-5 py-4 xl:py-5 font-medium transition-all duration-300 flex items-center space-x-1 whitespace-nowrap text-white/90 hover:text-white"
-                    target={item.href?.startsWith("http") ? "_blank" : "_self"}
-                    rel={item.href?.startsWith("http") ? "noopener noreferrer" : ""}
+                    target={typeof item.href === "string" && item.href.startsWith("http") ? "_blank" : "_self"}
+                    rel={typeof item.href === "string" && item.href.startsWith("http") ? "noopener noreferrer" : ""}
                     onClick={(e) => {
                       if (item.hasDropdown) e.preventDefault();
                     }}
@@ -278,98 +292,107 @@ export default function Navbar() {
 
                   <div className={`absolute bottom-0 left-3 right-3 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-400 transform origin-left transition-transform duration-300 ${activeDropdown === item.name ? "scale-x-100" : "scale-x-0"}`} />
 
+                  {/* Desktop dropdown panel */}
                   {item.hasDropdown && item.dropdownItems && activeDropdown === item.name && (
                     <div className="absolute top-full left-0 mt-0 z-50 min-w-[220px]">
                       <div className="bg-white shadow-2xl rounded-b-xl border border-gray-200/50 py-2">
-                        {item.dropdownItems.map((dropdownItem) => (
+                        {(item.dropdownItems || []).map((dropdownItem: AnyItem) => (
                           <div
                             key={dropdownItem.name}
                             className="relative"
                             onMouseEnter={() => {
                               if (dropdownItem.subDropdownItems) {
                                 setActiveSubDropdown(dropdownItem.name);
-                                if ((dropdownItem as any).isAlumni) {
-                                  const firstProg = ((dropdownItem.subDropdownItems as Program[])?.[0]?.name) || null;
-                                  setSelectedAlumniProgram(firstProg);
-                                }
+                              } else {
+                                setActiveSubDropdown(null);
                               }
                             }}
                             onMouseLeave={() => {
-                              if (dropdownItem.subDropdownItems && !dropdownItem.isAlumni) setActiveSubDropdown(null);
+                              setActiveSubDropdown((prev) => (prev === dropdownItem.name ? null : prev));
+                              setActiveProgram(null);
                             }}
                           >
-                            <a
-                              href={(dropdownItem as any).isAlumni ? "#" : (dropdownItem.href as string)}
-                              className="flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm"
-                              target={(dropdownItem as any).href?.startsWith?.("http") ? "_blank" : "_self"}
-                              rel={(dropdownItem as any).href?.startsWith?.("http") ? "noopener noreferrer" : ""}
+                            {/* top-level dropdown item (link or opener) */}
+                            <button
                               onClick={(e) => {
-                                if ((dropdownItem as any).isAlumni) {
+                                if (dropdownItem.subDropdownItems) {
                                   e.preventDefault();
                                   setActiveSubDropdown(dropdownItem.name);
-                                  const firstProg = ((dropdownItem.subDropdownItems as Program[])?.[0]?.name) || null;
-                                  setSelectedAlumniProgram(firstProg);
+                                } else if (dropdownItem.href) {
+                                  // link to page
+                                  router.push(dropdownItem.href);
+                                  setActiveDropdown(null);
                                 }
                               }}
+                              className="w-full text-left flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm"
                             >
                               <span>{dropdownItem.name}</span>
-                              {dropdownItem.subDropdownItems && <ChevronRight size={16} />}
-                            </a>
+                              {(dropdownItem.subDropdownItems || dropdownItem.href) && <ChevronRight size={16} />}
+                            </button>
 
-                            {dropdownItem.isAlumni && dropdownItem.subDropdownItems && activeSubDropdown === dropdownItem.name && (
-                              <div className="absolute left-full top-0 w-[680px] bg-white shadow-2xl rounded-r-xl border border-gray-200/50 z-50 max-h-[600px] overflow-hidden" onMouseEnter={() => setActiveSubDropdown(dropdownItem.name)} onMouseLeave={() => { setActiveSubDropdown(null); setSelectedAlumniProgram(null); }}>
-                                <div className="p-4">
-                                  <div className="grid grid-cols-4 gap-4">
-                                    <div className="col-span-1 space-y-2">
-                                      <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider pb-2">Programs</h3>
-                                      {((dropdownItem.subDropdownItems as Program[]) || []).map((program) => (
-                                        <button
-                                          key={program.name}
-                                          onMouseEnter={() => setSelectedAlumniProgram(program.name)}
-                                          onFocus={() => setSelectedAlumniProgram(program.name)}
-                                          onClick={() => {
-                                            if (program.batches && program.batches.length === 1 && program.batches[0].href) {
-                                              router.push(program.batches[0].href);
-                                              setActiveDropdown(null);
-                                              setActiveSubDropdown(null);
-                                              setSelectedAlumniProgram(null);
-                                            } else {
-                                              setSelectedAlumniProgram(program.name);
-                                            }
-                                          }}
-                                          className={`w-full text-left px-3 py-2 rounded-lg transition-all text-sm font-medium ${selectedAlumniProgram === program.name ? "bg-blue-50 text-blue-700" : "text-gray-700 hover:bg-blue-50"}`}
-                                          aria-pressed={selectedAlumniProgram === program.name}
-                                        >
-                                          {program.name}
-                                        </button>
-                                      ))}
-                                    </div>
-
-                                    <div className="col-span-3">
-                                      <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider pb-2 border-b-2 border-blue-500">
-                                        {selectedAlumniProgram ?? "Select a program"}
-                                      </h3>
-                                      <div className="pt-3 grid grid-cols-2 gap-3">
-                                        {alumniPrograms.find((p) => p.name === selectedAlumniProgram)?.batches?.map((batch) => (
-                                          <Link key={batch.name} href={batch.href || "#"} className="block px-3 py-2 text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm rounded-lg" onClick={() => { setActiveDropdown(null); setActiveSubDropdown(null); setSelectedAlumniProgram(null); }}>
-                                            {batch.name}
-                                          </Link>
-                                        )) ?? <div className="text-gray-500 italic px-3 py-2">Choose a program on the left to view batches.</div>}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-
-                            {!dropdownItem.isAlumni && dropdownItem.subDropdownItems && activeSubDropdown === dropdownItem.name && (
+                            {/* subDropdown (right flyout) for dropdownItem that has subDropdownItems */}
+                            {dropdownItem.subDropdownItems && activeSubDropdown === dropdownItem.name && (
                               <div className="absolute left-full top-0 w-56 bg-white shadow-2xl rounded-r-xl border border-gray-200/50 z-50">
                                 <div className="py-2">
-                                  {dropdownItem.subDropdownItems.map((subItem) => (
-                                    <Link key={(subItem as any).name} href={(subItem as any).href} className="block px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm">
-                                      {(subItem as any).name}
-                                    </Link>
-                                  ))}
+                                  {(dropdownItem.subDropdownItems || []).map((subItem: AnyItem) => {
+                                    const href = subItem.href;
+                                    const nested = subItem.subDropdownItems;
+
+                                    // If a simple link (MS/PhD or batch), render Link
+                                    if (typeof href === "string" && href.length > 0 && !nested) {
+                                      return (
+                                        <Link key={subItem.name} href={href} className="block px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm" onClick={() => { setActiveDropdown(null); setActiveSubDropdown(null); }}>
+                                          {subItem.name}
+                                        </Link>
+                                      );
+                                    }
+
+                                    // If this subItem has nested batches (program -> batches)
+                                    if (nested) {
+                                      return (
+                                        <div key={subItem.name} className="relative"
+                                             onMouseEnter={() => setActiveProgram(subItem.name)}
+                                             onMouseLeave={() => setActiveProgram(null)}
+                                        >
+                                          <div className="w-full flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm">
+                                            <span>{subItem.name}</span>
+                                            <ChevronRight size={14} />
+                                          </div>
+
+                                          {activeProgram === subItem.name && (
+                                            <div
+                                              className="absolute left-full top-0 bg-white shadow-2xl rounded-r-xl border border-gray-200/50 z-50
+                                                         max-h-[400px] overflow-y-auto px-2 py-3 w-[450px] lg:w-[520px]"
+                                            >
+                                              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+                                                {(nested || []).map((batch: AnyItem) => (
+                                                  <Link
+                                                    key={batch.name}
+                                                    href={batch.href}
+                                                    className="px-3 py-2 bg-white rounded-md border border-gray-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 text-sm font-medium text-center whitespace-nowrap"
+                                                    onClick={() => {
+                                                      setActiveDropdown(null);
+                                                      setActiveSubDropdown(null);
+                                                      setActiveProgram(null);
+                                                    }}
+                                                  >
+                                                    {batch.name}
+                                                  </Link>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    }
+
+                                    // fallback
+                                    return (
+                                      <div key={subItem.name} className="block px-4 py-2.5 text-gray-500 font-medium text-sm">
+                                        {subItem.name}
+                                      </div>
+                                    );
+                                  })}
                                 </div>
                               </div>
                             )}
@@ -392,14 +415,11 @@ export default function Navbar() {
             </div>
           </div>
 
+          {/* Mobile */}
           <div className="lg:hidden">
             <div className="flex items-center justify-between px-4 py-3 bg-transparent">
               <div className="flex items-center space-x-2">
-                <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer">
-                  <div className="bg-white rounded-lg p-1">
-                    <img src="/png/iitlogo.png" alt="IITI Logo" className="w-8 h-8 object-contain" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = "none"; }} />
-                  </div>
-                </a>
+                {/* small icon removed from mobile earlier — keep only text */}
                 <span className="font-bold text-base md:text-lg text-white">CSE IITI</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -408,7 +428,7 @@ export default function Navbar() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </button>
-                <button onClick={() => setIsOpen(!isOpen)} className="p-2 rounded-xl transition-all text-white hover:bg-white/10" aria-label="Toggle menu">
+                <button onClick={() => setIsOpen((s) => !s)} className="p-2 rounded-xl transition-all text-white hover:bg-white/10" aria-label="Toggle menu">
                   {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
               </div>
@@ -420,52 +440,79 @@ export default function Navbar() {
                   {navItems.map((item) => (
                     <div key={item.name}>
                       {item.hasDropdown ? (
-                        <button onClick={() => handleMobileDropdown(item.name)} className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all font-medium text-white hover:bg-white/10">
+                        <button
+                          onClick={() => toggleMobileDropdown(item.name)}
+                          className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all font-medium text-white hover:bg-white/10"
+                        >
                           <span className="font-semibold text-base md:text-lg">{item.name}</span>
                           <ChevronDown size={16} className={`transition-transform duration-300 ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
                         </button>
                       ) : (
-                        <Link href={item.href} onClick={() => setIsOpen(false)} className="block px-3 py-2.5 rounded-xl transition-all font-medium text-white hover:bg-white/10">
+                        <Link href={item.href} onClick={() => { setIsOpen(false); }} className="block px-3 py-2.5 rounded-xl transition-all font-medium text-white hover:bg-white/10">
                           <span className="font-semibold text-base md:text-lg">{item.name}</span>
                         </Link>
                       )}
 
                       {item.hasDropdown && openMobileDropdown === item.name && (
                         <div className="pl-3 mt-1 mb-1 space-y-1 border-l-2 border-blue-700 ml-3">
-                          {item.dropdownItems.map((dropdownItem) => (
+                          {(item.dropdownItems || []).map((dropdownItem: AnyItem) => (
                             <div key={dropdownItem.name}>
-                              {dropdownItem.isAlumni ? (
+                              {/* If dropdownItem has nested subDropdownItems (e.g. Alumni) */}
+                              {dropdownItem.subDropdownItems ? (
                                 <>
-                                  <button onClick={() => handleMobileSubDropdown(dropdownItem.name)} className="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10">
+                                  <button
+                                    onClick={() => {
+                                      // toggle this dropdownItem (top-level under People)
+                                      toggleMobileSub(dropdownItem.name);
+                                    }}
+                                    className="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10"
+                                  >
                                     <span>{dropdownItem.name}</span>
-                                    <ChevronDown size={14} className={`transition-transform duration-300 ${isAlumniActive(dropdownItem.name) ? "rotate-180" : ""}`} />
+                                    <ChevronDown size={14} className={`transition-transform duration-200 ${openMobileSub === dropdownItem.name ? "rotate-180" : ""}`} />
                                   </button>
 
-                                  {isAlumniActive(dropdownItem.name) && dropdownItem.subDropdownItems && (
-                                    <div className="pl-2 mt-1 space-y-2">
-                                      {(dropdownItem.subDropdownItems as Program[]).map((program) => (
-                                        <div key={program.name} className="space-y-1">
-                                          <button onClick={() => {
-                                            if (program.batches && program.batches.length === 1 && program.batches[0].href) {
-                                              router.push(program.batches[0].href);
-                                              setIsOpen(false);
-                                            } else {
-                                              const isOpen = openMobileSubDropdown === `${dropdownItem.name}:${program.name}`;
-                                              if (isOpen) setOpenMobileSubDropdown(dropdownItem.name); else setOpenMobileSubDropdown(`${dropdownItem.name}:${program.name}`);
-                                            }
-                                          }} className="w-full flex items-center justify-between px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
-                                            <span>{program.name}</span>
-                                            <ChevronDown size={12} className={`transition-transform duration-200 ${openMobileSubDropdown === `${dropdownItem.name}:${program.name}` ? "rotate-180" : ""}`} />
-                                          </button>
+                                  {/* show sub items (programs like BTech, MTech) */}
+                                  {openMobileSub === dropdownItem.name && (
+                                    <div className="pl-3 mt-1 space-y-1">
+                                      {(dropdownItem.subDropdownItems || []).map((subItem: AnyItem) => (
+                                        <div key={subItem.name} className="space-y-1">
+                                          {subItem.subDropdownItems ? (
+                                            <>
+                                              {/* This toggles nested batches grid. Use a unique key so it doesn't conflict. */}
+                                              <button
+                                                onClick={() => {
+                                                  const key = `${item.name}:${dropdownItem.name}:${subItem.name}`;
+                                                  toggleMobileNested(key);
+                                                }}
+                                                className="w-full flex items-center justify-between px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white"
+                                              >
+                                                <span>{subItem.name}</span>
+                                                <ChevronDown size={12} className={`transition-transform duration-200 ${openMobileNested === `${item.name}:${dropdownItem.name}:${subItem.name}` ? "rotate-180" : ""}`} />
+                                              </button>
 
-                                          {openMobileSubDropdown === `${dropdownItem.name}:${program.name}` && program.batches && (
-                                            <div className="pl-3 mt-1 space-y-1">
-                                              {program.batches.map((batch) => (
-                                                <Link key={batch.name} href={batch.href} onClick={() => setIsOpen(false)} className="block px-4 py-1.5 rounded-md text-xs transition-all text-white/70 hover:bg-white/10">
-                                                  {batch.name}
-                                                </Link>
-                                              ))}
-                                            </div>
+                                              {/* ===== Responsive grid for batches (mobile) ===== */}
+                                              {openMobileNested === `${item.name}:${dropdownItem.name}:${subItem.name}` && (
+                                                <div className="pl-3 mt-2">
+                                                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                                                    {(subItem.subDropdownItems || []).map((batch: AnyItem) => (
+                                                      <Link
+                                                        key={batch.name}
+                                                        href={batch.href}
+                                                        onClick={() => { setIsOpen(false); setOpenMobileDropdown(null); setOpenMobileSub(null); setOpenMobileNested(null); }}
+                                                        className="block px-2 py-2 rounded-md text-xs text-center transition-all text-white/90 hover:bg-white/10"
+                                                      >
+                                                        {batch.name}
+                                                      </Link>
+                                                    ))}
+                                                  </div>
+                                                </div>
+                                              )}
+                                            </>
+                                          ) : (
+                                            // simple link (MS/PhD)
+                                            <Link key={subItem.name} href={subItem.href} onClick={() => { setIsOpen(false); setOpenMobileDropdown(null); setOpenMobileSub(null); setOpenMobileNested(null); }} className="block px-3 py-2 rounded-md text-sm transition-all text-white/80 hover:bg-white/10">
+                                              {subItem.name}
+                                            </Link>
                                           )}
                                         </div>
                                       ))}
@@ -473,25 +520,26 @@ export default function Navbar() {
                                   )}
                                 </>
                               ) : (
+                                // dropdownItem without nested items (normal dropdown)
                                 <>
-                                  <button onClick={(e) => {
-                                    if (dropdownItem.subDropdownItems) {
-                                      e.preventDefault();
-                                      handleMobileSubDropdown(dropdownItem.name);
-                                    } else {
-                                      setIsOpen(false);
-                                      if (dropdownItem.href) router.push(dropdownItem.href);
-                                    }
-                                  }} className="flex items-center justify-between px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10">
+                                  <button
+                                    onClick={() => {
+                                      if (dropdownItem.href) {
+                                        setIsOpen(false);
+                                        router.push(dropdownItem.href);
+                                      }
+                                    }}
+                                    className="flex items-center justify-between px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10"
+                                  >
                                     <span>{dropdownItem.name}</span>
                                     {dropdownItem.subDropdownItems && <ChevronRight size={14} className="opacity-60" />}
                                   </button>
 
-                                  {dropdownItem.subDropdownItems && openMobileSubDropdown === dropdownItem.name && (
+                                  {dropdownItem.subDropdownItems && openMobileSub === dropdownItem.name && (
                                     <div className="pl-2 mt-1 space-y-1">
-                                      {dropdownItem.subDropdownItems.map((subItem) => (
-                                        <Link key={(subItem as any).name} href={(subItem as any).href} onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-xs transition-all text-white/80 hover:bg-white/10">
-                                          {(subItem as any).name}
+                                      {dropdownItem.subDropdownItems.map((subItem: AnyItem) => (
+                                        <Link key={subItem.name} href={subItem.href} onClick={() => { setIsOpen(false); setOpenMobileDropdown(null); setOpenMobileSub(null); setOpenMobileNested(null); }} className="block px-3 py-2 rounded-md text-xs transition-all text-white/80 hover:bg-white/10">
+                                          {subItem.name}
                                         </Link>
                                       ))}
                                     </div>
@@ -509,7 +557,7 @@ export default function Navbar() {
                 <div className="px-3 py-3 border-t border-blue-700">
                   <div className="grid grid-cols-1 gap-2">
                     {quickLinks.map((link) => (
-                      <Link key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10">
+                      <Link key={link.name} href={link.href} onClick={() => { setIsOpen(false); }} className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10">
                         {link.icon}
                         <span>{link.name}</span>
                       </Link>

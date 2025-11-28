@@ -199,12 +199,8 @@ export default function ConferencePublicationsPage() {
                         className="bg-white p-4 rounded-lg shadow-lg border border-gray-200"
                     >
                         <div className="flex items-start">
-                            
-                            <span className="text-xl font-bold text-blue-800 mr-4">
-                                {index + 1}.
-                            </span>
                          
-                            <p className="text-gray-700 leading-relaxed flex-1">
+                            <p className="px-6 py-4 text-xl text-gray-700 leading-relaxed flex-1">
                                 {publication}
                             </p>
                         </div>

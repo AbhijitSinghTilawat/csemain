@@ -6,61 +6,38 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Menu, X, ChevronDown, ExternalLink, ChevronRight } from "lucide-react";
 
-type Batch = { name: string; href: string };
-type Program = { name: string; batches?: Batch[] };
+type AnyItem = any;
 
 export default function HomeNavbar() {
   const router = useRouter();
+
+  // NAV UI State
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeSubDropdown, setActiveSubDropdown] = useState<string | null>(null);
+  const [activeProgram, setActiveProgram] = useState<string | null>(null);
+
   const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null);
-  const [openMobileSubDropdown, setOpenMobileSubDropdown] = useState<string | null>(null);
-  const [selectedAlumniProgram, setSelectedAlumniProgram] = useState<string | null>(null);
+  const [openMobileSub, setOpenMobileSub] = useState<string | null>(null);
+  const [openMobileNested, setOpenMobileNested] = useState<string | null>(null);
 
-  const handleMobileDropdown = (itemName: string) => {
-    if (openMobileDropdown === itemName) {
-      setOpenMobileDropdown(null);
-      setOpenMobileSubDropdown(null);
-    } else {
-      setOpenMobileDropdown(itemName);
-      setOpenMobileSubDropdown(null);
-    }
+  const toggleMobileDropdown = (name: string) => {
+    setOpenMobileDropdown(openMobileDropdown === name ? null : name);
+    setOpenMobileSub(null);
+    setOpenMobileNested(null);
   };
 
-  const handleMobileSubDropdown = (itemName: string) => {
-    if (openMobileSubDropdown === itemName) {
-      setOpenMobileSubDropdown(null);
-    } else {
-      setOpenMobileSubDropdown(itemName);
-    }
+  const toggleMobileSub = (name: string) => {
+    setOpenMobileSub(openMobileSub === name ? null : name);
+    setOpenMobileNested(null);
   };
 
-  const alumniPrograms: Program[] = [
-    {
-      name: "BTech",
-      batches: [
-        { name: "2009-13", href: "/people/alumni/btech/2009-13" },
-        { name: "2010-14", href: "/people/alumni/btech/2010-14" },
-        { name: "2011-15", href: "/people/alumni/btech/2011-15" },
-        { name: "2012-16", href: "/people/alumni/btech/2012-16" },
-        { name: "2013-17", href: "/people/alumni/btech/2013-17" },
-        { name: "2014-18", href: "/people/alumni/btech/2014-18" },
-        { name: "2015-19", href: "/people/alumni/btech/2015-19" },
-        { name: "2016-20", href: "/people/alumni/btech/2016-20" },
-        { name: "2017-21", href: "/people/alumni/btech/2017-21" },
-        { name: "2018-22", href: "/people/alumni/btech/2018-22" },
-        { name: "2019-23", href: "/people/alumni/btech/2019-23" },
-        { name: "2020-24", href: "/people/alumni/btech/2020-24" },
-        { name: "2021-25", href: "/people/alumni/btech/2021-25" },
-      ],
-    },
-    { name: "MTech", batches: [{ name: "2023-25", href: "/people/alumni/mtech" }] },
-    { name: "MS", batches: [{ name: "MS Alumni", href: "/people/alumni/ms" }] },
-    { name: "PhD", batches: [{ name: "PhD Alumni", href: "/people/alumni/phd" }] },
-  ];
+  const toggleMobileNested = (key: string) => {
+    setOpenMobileNested(openMobileNested === key ? null : key);
+  };
 
-  const navItems = [
+  // Full navigation structure (unchanged)
+  const navItems: AnyItem[] = [
     { name: "Home", href: "/" },
     {
       name: "People",
@@ -77,27 +54,54 @@ export default function HomeNavbar() {
             { name: "2025", href: "/people/btech-students/2025" },
             { name: "2024", href: "/people/btech-students/2024" },
             { name: "2023", href: "/people/btech-students/2023" },
-            { name: "2022", href: "/people/btech-students/2022" },
-          ],
+            { name: "2022", href: "/people/btech-students/2022" }
+          ]
         },
         {
           name: "MTech Students",
           href: "/people/mtech-students",
           subDropdownItems: [
             { name: "2025", href: "/people/mtech-students/2025" },
-            { name: "2024", href: "/people/mtech-students/2024" },
-          ],
+            { name: "2024", href: "/people/mtech-students/2024" }
+          ]
         },
         { name: "MS Students", href: "/people/ms-students" },
         { name: "PhD Students", href: "/people/phd-students" },
+
+        // Alumni with nested items
         {
           name: "Alumni",
           href: "#",
-          isAlumni: true,
-          subDropdownItems: alumniPrograms,
-        },
-      ],
+          subDropdownItems: [
+            {
+              name: "BTech",
+              subDropdownItems: [
+                { name: "2009-13", href: "/people/alumni/btech/2009-13" },
+                { name: "2010-14", href: "/people/alumni/btech/2010-14" },
+                { name: "2011-15", href: "/people/alumni/btech/2011-15" },
+                { name: "2012-16", href: "/people/alumni/btech/2012-16" },
+                { name: "2013-17", href: "/people/alumni/btech/2013-17" },
+                { name: "2014-18", href: "/people/alumni/btech/2014-18" },
+                { name: "2015-19", href: "/people/alumni/btech/2015-19" },
+                { name: "2016-20", href: "/people/alumni/btech/2016-20" },
+                { name: "2017-21", href: "/people/alumni/btech/2017-21" },
+                { name: "2018-22", href: "/people/alumni/btech/2018-22" },
+                { name: "2019-23", href: "/people/alumni/btech/2019-23" },
+                { name: "2020-24", href: "/people/alumni/btech/2020-24" },
+                { name: "2021-25", href: "/people/alumni/btech/2021-25" }
+              ]
+            },
+            {
+              name: "MTech",
+              subDropdownItems: [{ name: "2023-25", href: "/people/alumni/mtech" }]
+            },
+            { name: "MS", href: "/people/alumni/ms" },
+            { name: "PhD", href: "/people/alumni/phd" }
+          ]
+        }
+      ]
     },
+
     {
       name: "Research",
       href: "#",
@@ -110,8 +114,8 @@ export default function HomeNavbar() {
           subDropdownItems: [
             { name: "Research Projects", href: "/research/sponsored-projects/research" },
             { name: "GIAN Projects", href: "/research/sponsored-projects/gian" },
-            { name: "Fellowships", href: "/research/sponsored-projects/fellowships" },
-          ],
+            { name: "Fellowships", href: "/research/sponsored-projects/fellowships" }
+          ]
         },
         {
           name: "Publication",
@@ -121,34 +125,34 @@ export default function HomeNavbar() {
             { name: "Conference", href: "/research/publications/conference" },
             { name: "Patent", href: "/research/publications/patent" },
             { name: "Books", href: "/research/publications/books" },
-            { name: "Book Chapter", href: "/research/publications/book-chapter" },
-          ],
-        },
-      ],
+            { name: "Book Chapter", href: "/research/publications/book-chapter" }
+          ]
+        }
+      ]
     },
+
     {
       name: "Teaching",
-      href: "#",
       hasDropdown: true,
       dropdownItems: [
         { name: "Courses", href: "/teaching/courses" },
-        { name: "Moodle Login", href: "https://lms.iiti.ac.in/" },
-      ],
+        { name: "Moodle Login", href: "https://lms.iiti.ac.in/" }
+      ]
     },
+
     {
       name: "Programs",
-      href: "#",
       hasDropdown: true,
       dropdownItems: [
         { name: "BTech", href: "/programs/btech" },
         { name: "MTech", href: "/programs/mtech" },
         { name: "MS", href: "/programs/ms" },
-        { name: "PhD", href: "/programs/phd" },
-      ],
+        { name: "PhD", href: "/programs/phd" }
+      ]
     },
+
     {
       name: "About us",
-      href: "#",
       hasDropdown: true,
       dropdownItems: [
         { name: "Department", href: "/about/department" },
@@ -156,12 +160,12 @@ export default function HomeNavbar() {
         { name: "Facilities", href: "/about/facilities" },
         { name: "Achievements", href: "/about/achievements" },
         { name: "Contact us", href: "/about/contact" },
-        { name: "About Indore", href: "/about/indore" },
-      ],
+        { name: "About Indore", href: "/about/indore" }
+      ]
     },
+
     {
       name: "Join Us",
-      href: "#",
       hasDropdown: true,
       dropdownItems: [
         { name: "Prospective Faculty", href: "/join/faculty" },
@@ -169,330 +173,267 @@ export default function HomeNavbar() {
         { name: "Prospective MTech Students", href: "/join/mtech" },
         { name: "Prospective MS Students", href: "/join/ms" },
         { name: "Prospective PhD Students", href: "/join/phd" },
-        { name: "Interns", href: "/join/interns" },
-      ],
+        { name: "Interns", href: "/join/interns" }
+      ]
     },
+
     { name: "Seminar & Outreach", href: "https://events.cse.iiti.ac.in/" },
-    { name: "How to reach", href: "/contact" },
+    { name: "How to reach", href: "/contact" }
   ];
-
-  const quickLinks = [{ name: "IIT Indore", href: "https://www.iiti.ac.in/", icon: <ExternalLink size={14} /> }];
-
-  const isAlumniActive = (itemName: string) => {
-    return openMobileSubDropdown === itemName || openMobileSubDropdown?.startsWith(`${itemName}:`);
-  };
 
   return (
     <>
-      {/* ===== HERO / TOP HEADER (copied & adapted from your home page) ===== */}
+      {/* ===== HERO / TOP HEADER ===== */}
       <header className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
-  {/* dotted background */}
-  <div className="absolute inset-0 opacity-10 pointer-events-none">
-    <div
-      className="absolute inset-0"
-      style={{
-        backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.08) 2%, transparent 0%),
-                          radial-gradient(circle at 75px 75px, rgba(255,255,255,0.08) 2%, transparent 0%)`,
-        backgroundSize: "100px 100px",
-      }}
-    />
-  </div>
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.08) 2%, transparent 0%),
+                                radial-gradient(circle at 75px 75px, rgba(255,255,255,0.08) 2%, transparent 0%)`,
+              backgroundSize: "100px 100px",
+            }}
+          />
+        </div>
 
-  {/* Removed bottom padding here */}
-  <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 pt-10 md:pt-16 relative z-10">
-    <div className="max-w-7xl mx-auto w-full">
-      <div className="text-center">
-        <div className="flex justify-center mb-6">
-          <div className="w-[clamp(96px,12vw,220px)]">
-            <Image
-              src="/png/cselogo.png"
-              alt="CSE Department Logo"
-              width={1200}
-              height={1200}
-              className="w-full h-auto object-contain animate-float-slow"
-              priority
-            />
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 pt-10 md:pt-16 relative z-10">
+          <div className="max-w-7xl mx-auto w-full">
+            <div className="text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-[clamp(96px,12vw,220px)]">
+                  <Image
+                    src="/png/cselogo.png"
+                    alt="CSE Department Logo"
+                    width={1200}
+                    height={1200}
+                    className="w-full h-auto object-contain animate-float-slow"
+                    priority
+                  />
+                </div>
+              </div>
+
+              <div className="inline-flex items-center px-5 py-2 bg-blue-600/10 rounded-full border border-blue-500/30 mb-4">
+                <span className="text-xs sm:text-sm font-semibold text-blue-200 tracking-wide uppercase">
+                  DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
+                </span>
+              </div>
+
+              <h2 className="text-lg md:text-xl text-blue-100 font-medium mb-4">
+                भारतीय प्रौद्योगिकी संस्थान इंदौर • Indian Institute of Technology Indore
+              </h2>
+            </div>
           </div>
         </div>
+      </header>
 
-        <div className="inline-flex items-center px-5 py-2 bg-blue-600/10 rounded-full border border-blue-500/30 mb-4">
-          <span className="text-xs sm:text-sm font-semibold text-blue-200 tracking-wide uppercase">
-            DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
-          </span>
-        </div>
+      <style jsx>{`
+        @keyframes floatSlow {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-6px); }
+          100% { transform: translateY(0px); }
+        }
+        .animate-float-slow {
+          animation: floatSlow 6s ease-in-out infinite;
+        }
+        @media (max-width: 640px) {
+          header { padding-top: 2.5rem; }
+        }
+      `}</style>
 
-        <h2 className="text-lg md:text-xl text-blue-100 font-medium mb-4">
-          भारतीय प्रौद्योगिकी संस्थान इंदौर • Indian Institute of Technology Indore
-        </h2>
-      </div>
-    </div>
-  </div>
-</header>
-
-<style jsx>{`
-  @keyframes floatSlow {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(0px); }
-  }
-  .animate-float-slow {
-    animation: floatSlow 6s ease-in-out infinite;
-  }
-
-  /* Removed the bottom padding override */
-  @media (max-width: 640px) {
-    header { padding-top: 2.5rem; }
-  }
-`}</style>
-
-
-      {/* ===== STICKY NAVBAR (same as your main Navbar) ===== */}
-      <nav className="sticky top-0 z-50 transition-all duration-500 bg-gradient-to-r from-blue-900/95 via-blue-800/95 to-blue-900/95 backdrop-blur-lg shadow-xl">
-        <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 2xl:px-20">
-          <div className="hidden lg:flex items-center justify-between">
-            <div className="flex items-center flex-1 justify-evenly">
+      {/* ================= NAVBAR (placed below the header) ================= */}
+      {/* Important: overflow-visible so dropdowns can extend outside */}
+      <nav className="sticky top-0 z-50 bg-blue-800 shadow-xl text-white overflow-visible">
+        <div className="w-full px-6 overflow-visible">
+          {/* DESKTOP NAV */}
+          <div className="hidden lg:flex justify-between items-center">
+            <div className="flex flex-1 justify-evenly">
               {navItems.map((item) => (
                 <div
                   key={item.name}
-                  className="relative group"
+                  className="relative"
                   onMouseEnter={() => setActiveDropdown(item.name)}
                   onMouseLeave={() => {
                     setActiveDropdown(null);
                     setActiveSubDropdown(null);
-                    setSelectedAlumniProgram(null);
+                    setActiveProgram(null);
                   }}
                 >
-                  <a
-                    href={item.href}
-                    className="relative px-3 xl:px-4 2xl:px-5 py-4 xl:py-5 font-medium transition-all duration-300 flex items-center space-x-1 whitespace-nowrap text-white/90 hover:text-white"
-                    target={item.href?.startsWith("http") ? "_blank" : "_self"}
-                    rel={item.href?.startsWith("http") ? "noopener noreferrer" : ""}
-                    onClick={(e) => {
-                      if (item.hasDropdown) e.preventDefault();
-                    }}
-                  >
-                    <span className="font-semibold tracking-wide text-sm md:text-lg lg:text-lg">{item.name}</span>
-                    {item.hasDropdown && <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === item.name ? "rotate-180" : ""}`} />}
-                  </a>
+                  {item.hasDropdown ? (
+                    <button
+                      className="px-4 py-4 font-semibold hover:text-white/90 flex items-center gap-1"
+                      onClick={(e) => item.hasDropdown && e.preventDefault()}
+                    >
+                      {item.name}
+                      {item.hasDropdown && <ChevronDown size={14} />}
+                    </button>
+                  ) : (
+                    // Render real link for items without dropdown (fixes Seminar & Outreach, How to reach)
+                    <Link
+                      href={item.href}
+                      target={typeof item.href === "string" && item.href.startsWith("http") ? "_blank" : undefined}
+                      rel={typeof item.href === "string" && item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      className="px-4 py-4 font-semibold hover:text-white/90 flex items-center gap-1"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
 
-                  <div className={`absolute bottom-0 left-3 right-3 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-400 transform origin-left transition-transform duration-300 ${activeDropdown === item.name ? "scale-x-100" : "scale-x-0"}`} />
-
-                  {item.hasDropdown && item.dropdownItems && activeDropdown === item.name && (
-                    <div className="absolute top-full left-0 mt-0 z-50 min-w-[220px]">
-                      <div className="bg-white shadow-2xl rounded-b-xl border border-gray-200/50 py-2">
-                        {item.dropdownItems.map((dropdownItem) => (
-                          <div
-                            key={dropdownItem.name}
-                            className="relative"
-                            onMouseEnter={() => {
-                              if (dropdownItem.subDropdownItems) {
-                                setActiveSubDropdown(dropdownItem.name);
-                                if ((dropdownItem as any).isAlumni) {
-                                  const firstProg = ((dropdownItem.subDropdownItems as Program[])?.[0]?.name) || null;
-                                  setSelectedAlumniProgram(firstProg);
-                                }
-                              }
-                            }}
-                            onMouseLeave={() => {
-                              if (dropdownItem.subDropdownItems && !dropdownItem.isAlumni) setActiveSubDropdown(null);
+                  {/* --- DROPDOWN PANEL --- */}
+                  {item.hasDropdown && activeDropdown === item.name && item.dropdownItems && (
+                    <div
+                      // ensure this panel is above everything and overflow visible
+                      className="absolute top-full bg-white text-black shadow-xl rounded-md py-2 min-w-[220px]"
+                      style={{ zIndex: 9999, overflow: "visible" }}
+                    >
+                      {item.dropdownItems.map((dItem: AnyItem) => (
+                        <div
+                          key={dItem.name}
+                          className="relative"
+                          onMouseEnter={() => (dItem.subDropdownItems ? setActiveSubDropdown(dItem.name) : null)}
+                          onMouseLeave={() => setActiveSubDropdown(null)}
+                        >
+                          <button
+                            className="flex justify-between w-full px-4 py-2 hover:bg-gray-100 text-left"
+                            onClick={() => {
+                              if (dItem.href) router.push(dItem.href);
                             }}
                           >
-                            <a
-                              href={(dropdownItem as any).isAlumni ? "#" : (dropdownItem.href as string)}
-                              className="flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm"
-                              target={(dropdownItem as any).href?.startsWith?.("http") ? "_blank" : "_self"}
-                              rel={(dropdownItem as any).href?.startsWith?.("http") ? "noopener noreferrer" : ""}
-                              onClick={(e) => {
-                                if ((dropdownItem as any).isAlumni) {
-                                  e.preventDefault();
-                                  setActiveSubDropdown(dropdownItem.name);
-                                  const firstProg = ((dropdownItem.subDropdownItems as Program[])?.[0]?.name) || null;
-                                  setSelectedAlumniProgram(firstProg);
-                                }
-                              }}
+                            {dItem.name}
+                            {dItem.subDropdownItems && <ChevronRight size={14} />}
+                          </button>
+
+                          {/* SUB DROPDOWN */}
+                          {dItem.subDropdownItems && activeSubDropdown === dItem.name && (
+                            <div
+                              className="absolute left-full top-0 bg-white shadow-xl rounded-md py-2 min-w-[240px]"
+                              style={{ zIndex: 10000, overflow: "visible" }}
                             >
-                              <span>{dropdownItem.name}</span>
-                              {dropdownItem.subDropdownItems && <ChevronRight size={16} />}
-                            </a>
-
-                            {dropdownItem.isAlumni && dropdownItem.subDropdownItems && activeSubDropdown === dropdownItem.name && (
-                              <div className="absolute left-full top-0 w-[680px] bg-white shadow-2xl rounded-r-xl border border-gray-200/50 z-50 max-h-[600px] overflow-hidden" onMouseEnter={() => setActiveSubDropdown(dropdownItem.name)} onMouseLeave={() => { setActiveSubDropdown(null); setSelectedAlumniProgram(null); }}>
-                                <div className="p-4">
-                                  <div className="grid grid-cols-4 gap-4">
-                                    <div className="col-span-1 space-y-2">
-                                      <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider pb-2">Programs</h3>
-                                      {((dropdownItem.subDropdownItems as Program[]) || []).map((program) => (
-                                        <button
-                                          key={program.name}
-                                          onMouseEnter={() => setSelectedAlumniProgram(program.name)}
-                                          onFocus={() => setSelectedAlumniProgram(program.name)}
-                                          onClick={() => {
-                                            if (program.batches && program.batches.length === 1 && program.batches[0].href) {
-                                              router.push(program.batches[0].href);
-                                              setActiveDropdown(null);
-                                              setActiveSubDropdown(null);
-                                              setSelectedAlumniProgram(null);
-                                            } else {
-                                              setSelectedAlumniProgram(program.name);
-                                            }
-                                          }}
-                                          className={`w-full text-left px-3 py-2 rounded-lg transition-all text-sm font-medium ${selectedAlumniProgram === program.name ? "bg-blue-50 text-blue-700" : "text-gray-700 hover:bg-blue-50"}`}
-                                          aria-pressed={selectedAlumniProgram === program.name}
-                                        >
-                                          {program.name}
-                                        </button>
-                                      ))}
-                                    </div>
-
-                                    <div className="col-span-3">
-                                      <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider pb-2 border-b-2 border-blue-500">
-                                        {selectedAlumniProgram ?? "Select a program"}
-                                      </h3>
-                                      <div className="pt-3 grid grid-cols-2 gap-3">
-                                        {alumniPrograms.find((p) => p.name === selectedAlumniProgram)?.batches?.map((batch) => (
-                                          <Link key={batch.name} href={batch.href || "#"} className="block px-3 py-2 text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm rounded-lg" onClick={() => { setActiveDropdown(null); setActiveSubDropdown(null); setSelectedAlumniProgram(null); }}>
-                                            {batch.name}
-                                          </Link>
-                                        )) ?? <div className="text-gray-500 italic px-3 py-2">Choose a program on the left to view batches.</div>}
+                              {dItem.subDropdownItems.map((sItem: AnyItem) => {
+                                // Program with batches (nested mega)
+                                if (sItem.subDropdownItems) {
+                                  return (
+                                    <div key={sItem.name} onMouseEnter={() => setActiveProgram(sItem.name)} onMouseLeave={() => setActiveProgram(null)}>
+                                      <div className="flex justify-between px-4 py-2 hover:bg-gray-100">
+                                        {sItem.name}
+                                        <ChevronRight size={14} />
                                       </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
 
-                            {!dropdownItem.isAlumni && dropdownItem.subDropdownItems && activeSubDropdown === dropdownItem.name && (
-                              <div className="absolute left-full top-0 w-56 bg-white shadow-2xl rounded-r-xl border border-gray-200/50 z-50">
-                                <div className="py-2">
-                                  {dropdownItem.subDropdownItems.map((subItem) => (
-                                    <Link key={(subItem as any).name} href={(subItem as any).href} className="block px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm">
-                                      {(subItem as any).name}
-                                    </Link>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        ))} 
-                      </div>
+                                      {/* nested mega panel (batches) */}
+                                      {activeProgram === sItem.name && (
+                                        <div
+                                          className="absolute left-full top-0 bg-white shadow-xl rounded-md p-3 grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto"
+                                          style={{ zIndex: 10001, minWidth: 360 }}
+                                        >
+                                          {sItem.subDropdownItems.map((batch: AnyItem) => (
+                                            <Link
+                                              key={batch.name}
+                                              href={batch.href}
+                                              className="px-2 py-2 bg-gray-50 hover:bg-gray-100 rounded text-sm text-center whitespace-nowrap"
+                                              onClick={() => {
+                                                setActiveDropdown(null);
+                                                setActiveSubDropdown(null);
+                                                setActiveProgram(null);
+                                              }}
+                                            >
+                                              {batch.name}
+                                            </Link>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                }
+
+                                // Simple link
+                                return (
+                                  <Link key={sItem.name} href={sItem.href} className="block px-4 py-2 hover:bg-gray-100">
+                                    {sItem.name}
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
               ))}
-
             </div>
 
-            <div className="px-2 text-white">
-              <button className="p-2 rounded-lg hover:bg-white/10 transition-all duration-300" aria-label="Search">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            </div>
+            {/* Search icon */}
+            <button className="px-4">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 01-14 0z" />
+              </svg>
+            </button>
           </div>
 
-          {/* MOBILE */}
-          <div className="lg:hidden">
-            <div className="flex items-center justify-between px-4 py-3 bg-transparent">
-              <div className="flex items-center space-x-2">
-                <a href="https://www.iiti.ac.in/" target="_blank" rel="noopener noreferrer">
-                  <div className="bg-white rounded-lg p-1">
-                    <img src="/png/iitlogo.png" alt="IITI Logo" className="w-8 h-8 object-contain" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = "none"; }} />
-                  </div>
-                </a>
-                <span className="font-bold text-base md:text-lg text-white">CSE IITI</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button className="p-2 rounded-xl transition-all text-white hover:bg-white/10" aria-label="Search">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                <button onClick={() => setIsOpen(!isOpen)} className="p-2 rounded-xl transition-all text-white hover:bg-white/10" aria-label="Toggle menu">
-                  {isOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-              </div>
-            </div>
+          {/* MOBILE NAV */}
+          <div className="lg:hidden py-3 flex justify-between">
+            <span className="font-bold text-lg">Menu</span>
+            <button onClick={() => setIsOpen(!isOpen)} aria-label="toggle mobile menu">
+              {isOpen ? <X size={26} /> : <Menu size={26} />}
+            </button>
+          </div>
 
-            {isOpen && (
-              <div className="lg:hidden border-t bg-blue-900/95 backdrop-blur-lg border-blue-700">
-                <div className="px-3 py-3 space-y-1 max-h-[70vh] overflow-y-auto">
-                  {navItems.map((item) => (
-                    <div key={item.name}>
-                      {item.hasDropdown ? (
-                        <button onClick={() => handleMobileDropdown(item.name)} className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all font-medium text-white hover:bg-white/10">
-                          <span className="font-semibold text-base md:text-lg">{item.name}</span>
-                          <ChevronDown size={16} className={`transition-transform duration-300 ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
-                        </button>
-                      ) : (
-                        <Link href={item.href} onClick={() => setIsOpen(false)} className="block px-3 py-2.5 rounded-xl transition-all font-medium text-white hover:bg-white/10">
-                          <span className="font-semibold text-base md:text-lg">{item.name}</span>
-                        </Link>
-                      )}
+          {isOpen && (
+            <div className="lg:hidden space-y-2 pb-4">
+              {navItems.map((item) => (
+                <div key={item.name}>
+                  {!item.hasDropdown ? (
+                    <Link href={item.href} className="block px-4 py-2 bg-blue-700 rounded" onClick={() => setIsOpen(false)}>
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <>
+                      <button className="w-full px-4 py-2 bg-blue-700 rounded flex justify-between" onClick={() => toggleMobileDropdown(item.name)}>
+                        {item.name}
+                        <ChevronDown className={`transform ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
+                      </button>
 
-                      {item.hasDropdown && openMobileDropdown === item.name && (
-                        <div className="pl-3 mt-1 mb-1 space-y-1 border-l-2 border-blue-700 ml-3">
-                          {item.dropdownItems.map((dropdownItem) => (
-                            <div key={dropdownItem.name}>
-                              {dropdownItem.isAlumni ? (
-                                <>
-                                  <button onClick={() => handleMobileSubDropdown(dropdownItem.name)} className="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10">
-                                    <span>{dropdownItem.name}</span>
-                                    <ChevronDown size={14} className={`transition-transform duration-300 ${isAlumniActive(dropdownItem.name) ? "rotate-180" : ""}`} />
-                                  </button>
-
-                                  {isAlumniActive(dropdownItem.name) && dropdownItem.subDropdownItems && (
-                                    <div className="pl-2 mt-1 space-y-2">
-                                      {(dropdownItem.subDropdownItems as Program[]).map((program) => (
-                                        <div key={program.name} className="space-y-1">
-                                          <button onClick={() => {
-                                            if (program.batches && program.batches.length === 1 && program.batches[0].href) {
-                                              router.push(program.batches[0].href);
-                                              setIsOpen(false);
-                                            } else {
-                                              const isOpen = openMobileSubDropdown === `${dropdownItem.name}:${program.name}`;
-                                              if (isOpen) setOpenMobileSubDropdown(dropdownItem.name); else setOpenMobileSubDropdown(`${dropdownItem.name}:${program.name}`);
-                                            }
-                                          }} className="w-full flex items-center justify-between px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
-                                            <span>{program.name}</span>
-                                            <ChevronDown size={12} className={`transition-transform duration-200 ${openMobileSubDropdown === `${dropdownItem.name}:${program.name}` ? "rotate-180" : ""}`} />
-                                          </button>
-
-                                          {openMobileSubDropdown === `${dropdownItem.name}:${program.name}` && program.batches && (
-                                            <div className="pl-3 mt-1 space-y-1">
-                                              {program.batches.map((batch) => (
-                                                <Link key={batch.name} href={batch.href} onClick={() => setIsOpen(false)} className="block px-4 py-1.5 rounded-md text-xs transition-all text-white/70 hover:bg-white/10">
-                                                  {batch.name}
-                                                </Link>
-                                              ))}
-                                            </div>
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </>
+                      {openMobileDropdown === item.name && (
+                        <div className="pl-4 space-y-2">
+                          {item.dropdownItems.map((dItem: AnyItem) => (
+                            <div key={dItem.name}>
+                              {!dItem.subDropdownItems ? (
+                                <Link href={dItem.href} className="block px-4 py-2 bg-blue-600 rounded" onClick={() => setIsOpen(false)}>
+                                  {dItem.name}
+                                </Link>
                               ) : (
                                 <>
-                                  <button onClick={(e) => {
-                                    if (dropdownItem.subDropdownItems) {
-                                      e.preventDefault();
-                                      handleMobileSubDropdown(dropdownItem.name);
-                                    } else {
-                                      setIsOpen(false);
-                                      if (dropdownItem.href) router.push(dropdownItem.href);
-                                    }
-                                  }} className="flex items-center justify-between px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10">
-                                    <span>{dropdownItem.name}</span>
-                                    {dropdownItem.subDropdownItems && <ChevronRight size={14} className="opacity-60" />}
+                                  <button className="w-full px-4 py-2 bg-blue-600 rounded flex justify-between" onClick={() => toggleMobileSub(dItem.name)}>
+                                    {dItem.name}
+                                    <ChevronDown className={`transform ${openMobileSub === dItem.name ? "rotate-180" : ""}`} />
                                   </button>
 
-                                  {dropdownItem.subDropdownItems && openMobileSubDropdown === dropdownItem.name && (
-                                    <div className="pl-2 mt-1 space-y-1">
-                                      {dropdownItem.subDropdownItems.map((subItem) => (
-                                        <Link key={(subItem as any).name} href={(subItem as any).href} onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-md text-xs transition-all text-white/80 hover:bg-white/10">
-                                          {(subItem as any).name}
-                                        </Link>
+                                  {openMobileSub === dItem.name && (
+                                    <div className="pl-4 space-y-2">
+                                      {dItem.subDropdownItems.map((sItem: AnyItem) => (
+                                        <div key={sItem.name}>
+                                          {!sItem.subDropdownItems ? (
+                                            <Link href={sItem.href} className="block px-4 py-2 bg-blue-500 rounded" onClick={() => setIsOpen(false)}>
+                                              {sItem.name}
+                                            </Link>
+                                          ) : (
+                                            <>
+                                              <button className="w-full px-4 py-2 bg-blue-500 rounded flex justify-between" onClick={() => toggleMobileNested(`${item.name}:${dItem.name}:${sItem.name}`)}>
+                                                {sItem.name}
+                                                <ChevronDown className={`transform ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "rotate-180" : ""}`} />
+                                              </button>
+
+                                              {openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` && (
+                                                <div className="pl-4 grid grid-cols-2 gap-2">
+                                                  {sItem.subDropdownItems.map((batch: AnyItem) => (
+                                                    <Link key={batch.name} href={batch.href} className="block px-3 py-2 bg-blue-400 rounded text-center" onClick={() => setIsOpen(false)}>
+                                                      {batch.name}
+                                                    </Link>
+                                                  ))}
+                                                </div>
+                                              )}
+                                            </>
+                                          )}
+                                        </div>
                                       ))}
                                     </div>
                                   )}
@@ -502,23 +443,12 @@ export default function HomeNavbar() {
                           ))}
                         </div>
                       )}
-                    </div>
-                  ))}
+                    </>
+                  )}
                 </div>
-
-                <div className="px-3 py-3 border-t border-blue-700">
-                  <div className="grid grid-cols-1 gap-2">
-                    {quickLinks.map((link) => (
-                      <Link key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-all text-sm font-medium text-white/80 hover:bg-white/10">
-                        {link.icon}
-                        <span>{link.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </nav>
     </>

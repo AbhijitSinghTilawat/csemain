@@ -91,30 +91,28 @@ export default function GianCoursesPage() {
                         className="bg-white p-6 rounded-lg shadow-lg border border-gray-200"
                     > 
                         <div className="flex items-start">
-                            <span className="text-2xl font-bold text-blue-800 mr-4">
-                                {index + 1}.
-                            </span>
-                            <h2 className="text-xl font-semibold text-blue-800 mb-4 flex-1">
+                            
+                            <h2 className="text-2xl font-semibold text-blue-800 mb-4 flex-1">
                                 {course.title}
                             </h2>
                         </div>
 
                     
                         <div className="pl-10 space-y-2">
-                            <p className="text-gray-700">
-                                <strong className="font-medium text-gray-900">
+                            <p className="text-xl text-gray-700">
+                                <strong className="text-xl font-medium text-gray-900">
                                     Offered By:
                                 </strong> {course.offeredBy}
                             </p>
 
-                            <p className="text-gray-700">
-                                <strong className="font-medium text-gray-900">
+                            <p className="text-xl text-gray-700">
+                                <strong className="text-xl font-medium text-gray-900">
                                     Coordinator:
                                 </strong> {course.coordinator}
                             </p>
 
-                            <p className="text-gray-700">
-                                <strong className="font-medium text-gray-900">
+                            <p className="text-xl text-gray-700">
+                                <strong className="text-xl font-medium text-gray-900">
                                     Course Schedule:
                                 </strong> {course.schedule}
                             </p>
@@ -125,16 +123,16 @@ export default function GianCoursesPage() {
                                     href={course.registerLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-blue-600 font-medium hover:underline"
+                                    className="text-xl text-blue-600 font-medium hover:underline"
                                 >
                                     To register for this course click here
                                 </a>
-                                <span className="text-gray-400">|</span>
+                                <span className="text-xl text-gray-400">|</span>
                                 <a
                                     href={course.webpageLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-blue-600 font-medium hover:underline"
+                                    className="text-xl text-blue-600 font-medium hover:underline"
                                 >
                                     For course webpage click here
                                 </a>

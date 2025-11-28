@@ -217,10 +217,10 @@ export default function ResearchAreasPage() {
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-blue-900">
                                         <tr>
-                                            <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                                            <th className="px-6 py-4 text-left text-lg font-bold text-white uppercase tracking-wider">
                                                 Research Areas
                                             </th>
-                                            <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                                            <th className="px-6 py-4 text-left text-lg font-bold text-white uppercase tracking-wider">
                                                 Faculty Members
                                             </th>
                                         </tr>
@@ -232,10 +232,10 @@ export default function ResearchAreasPage() {
                                                 key={member.name}
                                                 className="hover:bg-blue-50 transition-colors"
                                             >
-                                                <td className="px-6 py-4 text-sm text-gray-700">
+                                                <td className="px-6 py-4 text-xl text-gray-700">
                                                     {member.areas}
                                                 </td>
-                                                <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                <td className="px-6 py-4 text-xl font-medium text-gray-900 whitespace-nowrap">
                                                     {member.name}
                                                 </td>
                                             </tr>

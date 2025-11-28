@@ -4,14 +4,17 @@ export default async function StaffPage() {
     const staffMembers = await getStaffMembers();
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen">
-            <div className="container mx-auto">
+        <div className="bg-gray-50 min-h-screen w-full">
+
+            <div className="w-full">
 
                 <h1 className="text-4xl font-extrabold text-gray-900 border-b-4 border-indigo-600 pb-2 mb-8">
                     👥 Staff Members
                 </h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                 <div className="w-full"></div>
+
+                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
 
                     {staffMembers.map((member) => (
                         <div

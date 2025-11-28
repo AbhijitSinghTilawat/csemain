@@ -8,7 +8,7 @@ export default async function FacultyPage() {
         name: "Dr. Ranveer Singh",
         education: "PhD, IIT Jodhpur",
         designation: "Head of Department",
-        specialization: "Algorithmic Graph Theory, Computational Complexity",
+        specialization: " Algorithmic Graph Theory, Computational Complexity, Determinant vs. Permanent, Expanders and Ramanujan Graphs",
         email: "hodcse@iiti.ac.in",
         profileImagePath: "/facultypng/Ranveer_Singh.jpg",
         researchAreas: ["AI", "Deep Learning", "Computer Vision"],
