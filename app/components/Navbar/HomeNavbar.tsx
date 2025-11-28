@@ -485,8 +485,11 @@ export default function HomeNavbar() {
                           <ChevronDown className={`transition-transform ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
                         </button>
 
-                        {/* Dropdown panel - simple indentation, no card or border */}
-                        <div className={`pl-3 mt-1 transition-all overflow-hidden ${openMobileDropdown === item.name ? "max-h-[60vh] opacity-100" : "max-h-0 opacity-0"}`}>
+                        {/* Dropdown panel - made scrollable when open */}
+                        <div
+                          className={`pl-3 mt-1 transition-all ${openMobileDropdown === item.name ? "max-h-[65vh] opacity-100 overflow-auto" : "max-h-0 opacity-0 overflow-hidden"}`}
+                          style={{ WebkitOverflowScrolling: 'touch' }}
+                        >
                           {item.dropdownItems.map((dItem: AnyItem) => (
                             <div key={dItem.name} className="pt-1">
                               {!dItem.subDropdownItems ? (
@@ -508,7 +511,10 @@ export default function HomeNavbar() {
                                     <ChevronDown className={`transition-transform ${openMobileSub === dItem.name ? "rotate-180" : ""}`} />
                                   </button>
 
-                                  <div className={`pl-3 mt-1 transition-all overflow-hidden ${openMobileSub === dItem.name ? "max-h-[50vh] opacity-100" : "max-h-0 opacity-0"}`}>
+                                  <div
+                                    className={`pl-3 mt-1 transition-all ${openMobileSub === dItem.name ? "max-h-[55vh] opacity-100 overflow-auto" : "max-h-0 opacity-0 overflow-hidden"}`}
+                                    style={{ WebkitOverflowScrolling: 'touch' }}
+                                  >
                                     {dItem.subDropdownItems.map((sItem: AnyItem) => (
                                       <div key={sItem.name} className="pt-1">
                                         {!sItem.subDropdownItems ? (
@@ -530,7 +536,10 @@ export default function HomeNavbar() {
                                               <ChevronDown className={`transition-transform ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "rotate-180" : ""}`} />
                                             </button>
 
-                                            <div className={`pl-3 mt-1 grid grid-cols-2 gap-2 transition-all overflow-hidden ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "max-h-[45vh] opacity-100" : "max-h-0 opacity-0"}`}>
+                                            <div
+                                              className={`pl-3 mt-1 grid grid-cols-2 gap-2 transition-all ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "max-h-[55vh] opacity-100 overflow-y-auto" : "max-h-0 opacity-0 overflow-hidden"}`}
+                                              style={{ WebkitOverflowScrolling: 'touch' }}
+                                            >
                                               {sItem.subDropdownItems.map((batch: AnyItem) => (
                                                 <Link
                                                   key={batch.name}
