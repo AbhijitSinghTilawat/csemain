@@ -89,7 +89,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               {[
                 { href: "/people/faculty", label: "Faculty & Staff" },
-                { href: "/research", label: "Research" },
+                { href: "/research/areas", label: "Research" },
                 { href: "/about/contact", label: "Contact Us" },
               ].map((l) => (
                 <li key={l.href}>
