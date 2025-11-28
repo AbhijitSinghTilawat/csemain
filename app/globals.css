@@ -2,257 +2,194 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Color & animation variables */
-:root {
-  --primary: #6366f1;
-  --primary-weak: #818cf8;
-  --track: #e5e7eb;
-  --bg: #f8fafc;
-  --float-d1: -10px;
-  --float-d2: -15px;
-  --float-d3: -8px;
-  --float-t1: 3s;
-  --float-t2: 4s;
-  --float-t3: 5s;
-  --pulse-t: 4s;
-  --scrollbar-w: 6px;
-}
-
-/* Dark mode fallbacks */
 @media (prefers-color-scheme: dark) {
+
   :root {
-    --track: #111827;
-    --bg: #0b1220;
     --primary: #7c83ff;
     --primary-weak: #9aa2ff;
-  }
-}
-
-/* Floating keyframe template (parameterised by translate distance via CSS var) */
-@keyframes float-vertical {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(var(--float-distance));
-  }
-}
-
-/* Horizontal micro float for text */
-@keyframes float-horizontal {
-
-  0%,
-  100% {
-    transform: translateX(0);
+    --track: #111827;
+    --bg: #0b1220;
+    --float-d1: -10px;
+    --float-d2: -15px;
+    --float-d3: -8px;
+    --float-t1: 3s;
+    --float-t2: 4s;
+    --float-t3: 5s;
+    --pulse-t: 4s;
+    --scrollbar-w: 6px;
   }
 
-  50% {
-    transform: translateX(5px);
-  }
-}
-
-/* Pulse opacity */
-@keyframes pulse-slow {
-
-  0%,
-  100% {
-    opacity: 1;
+  /* Animations */
+  @keyframes float-vertical {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(var(--float-distance)); }
   }
 
-  50% {
-    opacity: .7;
-  }
-}
-
-/* Scrollbar glow */
-@keyframes scrollbar-glow {
-  0% {
-    background: var(--primary);
+  @keyframes float-horizontal {
+    0%,100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
   }
 
-  50% {
-    background: var(--primary-weak);
+  @keyframes pulse-slow {
+    0%,100% { opacity: 1; }
+    50% { opacity: .7; }
   }
 
-  100% {
-    background: var(--primary);
-  }
-}
-
-/* Slide-in */
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  @keyframes scrollbar-glow {
+    0% { background: var(--primary); }
+    50% { background: var(--primary-weak); }
+    100% { background: var(--primary); }
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-}
 
-/* Utility animation classes (use via Tailwind/HTML) */
-.animate-float {
-  --float-distance: var(--float-d1);
-  animation: float-vertical var(--float-t1) ease-in-out infinite;
-}
+  /* Utilities */
+  .animate-float {
+    --float-distance: var(--float-d1);
+    animation: float-vertical var(--float-t1) ease-in-out infinite;
+  }
 
-.animate-float-delayed {
-  --float-distance: var(--float-d2);
-  animation: float-vertical var(--float-t2) ease-in-out infinite;
-}
+  .animate-float-delayed {
+    --float-distance: var(--float-d2);
+    animation: float-vertical var(--float-t2) ease-in-out infinite;
+  }
 
-.animate-float-slow {
-  --float-distance: var(--float-d3);
-  animation: float-vertical var(--float-t3) ease-in-out infinite;
-}
+  .animate-float-slow {
+    --float-distance: var(--float-d3);
+    animation: float-vertical var(--float-t3) ease-in-out infinite;
+  }
 
-.animate-pulse-slow {
-  animation: pulse-slow var(--pulse-t) ease-in-out infinite;
-}
+  .animate-pulse-slow {
+    animation: pulse-slow var(--pulse-t) ease-in-out infinite;
+  }
 
-.scroll-text {
-  animation: float-horizontal 3s ease-in-out infinite;
-}
+  .scroll-text {
+    animation: float-horizontal 3s ease-in-out infinite;
+  }
 
-.scroll-anim {
-  animation: slide-in .6s ease-out both;
-}
-
-/* Respect user's motion preference */
-@media (prefers-reduced-motion: reduce) {
-
-  .animate-float,
-  .animate-float-delayed,
-  .animate-float-slow,
-  .animate-pulse-slow,
-  .scroll-text,
   .scroll-anim {
-    animation: none !important;
-    transition: none !important;
+    animation: slide-in .6s ease-out both;
   }
-}
 
-/* Hide scrollbar but keep scrolling (cross-browser) */
-.no-scrollbar {
-  -ms-overflow-style: none;
-  /* IE, Edge */
-  scrollbar-width: none;
-  /* Firefox */
-}
+  /* No motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-float-delayed,
+    .animate-float-slow,
+    .animate-pulse-slow,
+    .scroll-text,
+    .scroll-anim {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+  /* Hide scrollbar */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-/* Custom thin scrollbar with subtle glow effect */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary) var(--track);
-  animation: slide-in .4s ease-out;
-}
+  /* Custom dark scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--track);
+    animation: slide-in .4s ease-out;
+  }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: var(--scrollbar-w);
-  height: var(--scrollbar-w);
-}
+  .custom-scrollbar::-webkit-scrollbar {
+    width: var(--scrollbar-w);
+    height: var(--scrollbar-w);
+  }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--track);
-  border-radius: 999px;
-}
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--track);
+    border-radius: 999px;
+  }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 999px;
-  animation: scrollbar-glow 2s ease-in-out infinite;
-  border: 2px solid transparent;
-  /* keep thumb crisp on dark tracks */
-  background-clip: padding-box;
-}
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 999px;
+    animation: scrollbar-glow 2s ease-in-out infinite;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
 
-/* Small accessibility tweak: focus-visible outlines */
-:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--primary) 60%, white);
-  outline-offset: 2px;
-}
+  :focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--primary) 60%, white);
+    outline-offset: 2px;
+  }
 
-/* Utility background for full-page sections */
-.full-page-bg {
-  background-color: var(--bg);
-  min-height: 100vh;
-}
+  .full-page-bg {
+    background-color: var(--bg);
+    min-height: 100vh;
+  }
 
-/* Keep animations smooth on devices but avoid heavy paint */
-* {
-  backface-visibility: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  * {
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-/* Slight entrance for cards / sections */
-.card-entrance {
-  transform-origin: top center;
-  will-change: transform, opacity;
-  animation: slide-in .45s ease-out both;
-}
-/* Auto vertical scroll inside home panels */
-/* smooth infinite vertical scroll (global) */
-:root { --scroll-duration: 14s; } /* default — smaller = faster */
+  .card-entrance {
+    transform-origin: top center;
+    will-change: transform, opacity;
+    animation: slide-in .45s ease-out both;
+  }
 
-.auto-scroll {
-  overflow: hidden;
-  position: relative;
-}
+  :root { --scroll-duration: 14s; }
 
-/* moving inner element */
-.auto-scroll-inner {
-  display: flex;
-  flex-direction: column;
-  will-change: transform;
-  transform: translateZ(0);
-  animation: smoothLoop var(--scroll-duration) linear infinite;
-}
+  .auto-scroll {
+    overflow: hidden;
+    position: relative;
+  }
 
-/* pause on hover */
-.auto-scroll:hover .auto-scroll-inner {
-  animation-play-state: paused;
-}
+  .auto-scroll-inner {
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+    animation: smoothLoop var(--scroll-duration) linear infinite;
+  }
 
-/* duplicate blocks */
-.auto-scroll .scroll-block {
-  flex-shrink: 0;
-}
+  .auto-scroll:hover .auto-scroll-inner {
+    animation-play-state: paused;
+  }
 
-/* seamless loop: translate by 50% because content is duplicated */
-@keyframes smoothLoop {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
-}
+  .scroll-block { flex-shrink: 0; }
 
-/* Fix seam caused by Tailwind's space-y (removes top margin on the duplicated block) */
-.auto-scroll .scroll-block[aria-hidden] ul > * {
-  margin-top: 0 !important;
-}
+  @keyframes smoothLoop {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
 
-/* Ensure last-child doesn't add extra bottom spacing */
-.auto-scroll .scroll-block ul > *:last-child { margin-bottom: 0 !important; }
+  .auto-scroll .scroll-block[aria-hidden] ul > * {
+    margin-top: 0 !important;
+  }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .auto-scroll-inner { animation: none !important; }
-}
-.fade-in-up {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.9s ease-out, transform 0.9s ease-out;
-}
+  .auto-scroll .scroll-block ul > *:last-child {
+    margin-bottom: 0 !important;
+  }
 
-.fade-in-up.show {
-  opacity: 1;
-  transform: translateY(0);
-}
+  @media (prefers-reduced-motion: reduce) {
+    .auto-scroll-inner {
+      animation: none !important;
+    }
+  }
+
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+  }
+  .fade-in-up.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+} /* END DARK MODE */
