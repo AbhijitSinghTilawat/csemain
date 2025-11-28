@@ -241,7 +241,7 @@ export default function HomeNavbar() {
               </div>
 
               <h2 className="text-lg md:text-xl text-white/90 font-medium mb-4">
-                भारतीय प्रौद्योगिकी संस्थान इंदोर • Indian Institute of Technology Indore
+                भारतीय प्रौद्योगिकी संस्थान इंदौर • Indian Institute of Technology Indore
               </h2>
             </div>
           </div>
@@ -459,7 +459,7 @@ export default function HomeNavbar() {
 
           <div className="lg:hidden">
             <div
-              className={`transition-all duration-300 ${isOpen ? 'max-h-[75vh] opacity-100 overflow-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}
+              className={`transition-all duration-300 ${isOpen ? 'max-h-none opacity-100 overflow-visible' : 'max-h-0 opacity-0 overflow-hidden'}`}
               style={{ WebkitOverflowScrolling: 'touch' }}
             >
               <div className="p-2 space-y-1">
@@ -485,9 +485,9 @@ export default function HomeNavbar() {
                           <ChevronDown className={`transition-transform ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
                         </button>
 
-                        {/* Dropdown panel - made scrollable when open */}
+                        {/* Dropdown panel - no height limit when open */}
                         <div
-                          className={`pl-3 mt-1 transition-all ${openMobileDropdown === item.name ? "max-h-[65vh] opacity-100 overflow-auto" : "max-h-0 opacity-0 overflow-hidden"}`}
+                          className={`pl-3 mt-1 transition-all ${openMobileDropdown === item.name ? "max-h-none opacity-100 overflow-visible" : "max-h-0 opacity-0 overflow-hidden"}`}
                           style={{ WebkitOverflowScrolling: 'touch' }}
                         >
                           {item.dropdownItems.map((dItem: AnyItem) => (
@@ -512,7 +512,7 @@ export default function HomeNavbar() {
                                   </button>
 
                                   <div
-                                    className={`pl-3 mt-1 transition-all ${openMobileSub === dItem.name ? "max-h-[55vh] opacity-100 overflow-auto" : "max-h-0 opacity-0 overflow-hidden"}`}
+                                    className={`pl-3 mt-1 transition-all ${openMobileSub === dItem.name ? "max-h-none opacity-100 overflow-visible" : "max-h-0 opacity-0 overflow-hidden"}`}
                                     style={{ WebkitOverflowScrolling: 'touch' }}
                                   >
                                     {dItem.subDropdownItems.map((sItem: AnyItem) => (
@@ -537,7 +537,7 @@ export default function HomeNavbar() {
                                             </button>
 
                                             <div
-                                              className={`pl-3 mt-1 grid grid-cols-2 gap-2 transition-all ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "max-h-[55vh] opacity-100 overflow-y-auto" : "max-h-0 opacity-0 overflow-hidden"}`}
+                                              className={`pl-3 mt-1 grid grid-cols-2 gap-2 transition-all ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "max-h-none opacity-100 overflow-visible" : "max-h-0 opacity-0 overflow-hidden"}`}
                                               style={{ WebkitOverflowScrolling: 'touch' }}
                                             >
                                               {sItem.subDropdownItems.map((batch: AnyItem) => (
