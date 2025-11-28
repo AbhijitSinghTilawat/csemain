@@ -327,7 +327,8 @@ export default function HomeNavbar() {
                               className="w-full text-left flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm"
                             >
                               <span>{dropdownItem.name}</span>
-                              {(dropdownItem.subDropdownItems || dropdownItem.href) && <ChevronRight size={16} />}
+                              {/* Only show chevron-right if this dropdownItem actually has subDropdownItems */}
+                              {dropdownItem.subDropdownItems && <ChevronRight size={16} />}
                             </button>
 
                             {/* subDropdown (right flyout) for dropdownItem that has subDropdownItems */}
