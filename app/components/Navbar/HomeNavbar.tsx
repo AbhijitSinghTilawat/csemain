@@ -58,7 +58,7 @@ export default function HomeNavbar() {
     setOpenMobileNested(openMobileNested === key ? null : key);
   };
 
-  // Full navigation structure (unchanged)
+  // Full navigation structure
   const navItems: AnyItem[] = [
     { name: "Home", href: "/" },
     {
@@ -241,7 +241,7 @@ export default function HomeNavbar() {
               </div>
 
               <h2 className="text-lg md:text-xl text-white/90 font-medium mb-4">
-                भारतीय प्रौद्योगिकी संस्थान इंदौर • Indian Institute of Technology Indore
+                भारतीय प्रौद्योगिकी संस्थान इंदोर • Indian Institute of Technology Indore
               </h2>
             </div>
           </div>
@@ -264,9 +264,8 @@ export default function HomeNavbar() {
 
       {/* ================= NAVBAR (placed below the header) ================= */}
       <nav className="sticky top-0 z-50 bg-blue-800 text-white border-b border-blue-700">
-        {/* Make this container full-bleed (no left/right padding) */}
         <div className="w-full px-0">
-          {/* DESKTOP NAV: full width, items take equal space and wrap when needed */}
+          {/* DESKTOP NAV */}
           <div className="hidden lg:flex items-center w-full">
             <div className="flex w-full flex-wrap">
               {navItems.map((item) => {
@@ -280,7 +279,6 @@ export default function HomeNavbar() {
                       setActiveDropdown(item.name);
                     }}
                     onMouseLeave={() => {
-                      // schedule a delayed hide so user can move into the dropdown
                       scheduleHideAll();
                     }}
                   >
@@ -302,7 +300,6 @@ export default function HomeNavbar() {
                           onMouseEnter={() => clearHideTimer()}
                           onMouseLeave={() => scheduleHideAll()}
                           onClick={() => {
-                            // close menu after navigation
                             setActiveDropdown(null);
                             setActiveSubDropdown(null);
                             setActiveProgram(null);
@@ -313,7 +310,7 @@ export default function HomeNavbar() {
                       )}
                     </div>
 
-                    {/* --- DROPDOWN PANEL --- */}
+                    {/* Desktop dropdowns */}
                     {item.hasDropdown && item.dropdownItems && (
                       <div
                         onMouseEnter={() => {
@@ -343,7 +340,6 @@ export default function HomeNavbar() {
                                   className="flex justify-between items-center w-full px-3 py-2 rounded-md hover:bg-slate-50 text-left text-[14px]"
                                   onClick={() => {
                                     if (dItem.href) {
-                                      // if this dropdown item has a direct href, navigate
                                       router.push(dItem.href);
                                       setActiveDropdown(null);
                                       setActiveSubDropdown(null);
@@ -355,7 +351,6 @@ export default function HomeNavbar() {
                                   {dItem.subDropdownItems && <ChevronRight size={14} />}
                                 </button>
 
-                                {/* SUB DROPDOWN */}
                                 {dItem.subDropdownItems && (
                                   <div
                                     onMouseEnter={() => {
@@ -385,7 +380,6 @@ export default function HomeNavbar() {
                                                 <ChevronRight size={14} />
                                               </div>
 
-                                              {/* NESTED PROGRAM GRID (e.g., Alumni -> BTech batches) */}
                                               {isProg && (
                                                 <div
                                                   onMouseEnter={() => {
@@ -401,11 +395,9 @@ export default function HomeNavbar() {
                                                       href={batch.href}
                                                       className="px-2 py-2 bg-slate-50 hover:bg-slate-100 rounded text-[14px] text-center whitespace-nowrap"
                                                       onMouseDown={() => {
-                                                        // prevent hide timer while pressing
                                                         clearHideTimer();
                                                       }}
                                                       onClick={() => {
-                                                        // navigate (Link will do it) and close menus
                                                         setActiveDropdown(null);
                                                         setActiveSubDropdown(null);
                                                         setActiveProgram(null);
@@ -420,7 +412,6 @@ export default function HomeNavbar() {
                                           );
                                         }
 
-                                        // plain sub-item (e.g., "MS", "PhD") — make it reliably clickable
                                         return (
                                           <Link
                                             key={sItem.name}
@@ -428,9 +419,8 @@ export default function HomeNavbar() {
                                             className="block px-3 py-2 rounded-md hover:bg-slate-50 text-[14px]"
                                             onMouseEnter={() => clearHideTimer()}
                                             onMouseLeave={() => scheduleHideAll()}
-                                            onMouseDown={() => clearHideTimer()} // ensure mouse-down clears timer before click
+                                            onMouseDown={() => clearHideTimer()}
                                             onClick={() => {
-                                              // close menus after navigation
                                               setActiveDropdown(null);
                                               setActiveSubDropdown(null);
                                               setActiveProgram(null);
@@ -458,58 +448,96 @@ export default function HomeNavbar() {
           {/* MOBILE NAV */}
           <div className="lg:hidden py-3 flex justify-between items-center px-4">
             <span className="font-semibold text-lg">Menu</span>
-            <button onClick={() => setIsOpen(!isOpen)} aria-label="toggle mobile menu" className="p-2 rounded-md hover:bg-white/6 transition">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="toggle mobile menu"
+              className="p-2 rounded-md hover:bg-white/06 transition"
+            >
               {isOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
 
           <div className="lg:hidden">
-            <div className={`overflow-hidden transition-all duration-300 ease-[cubic-bezier(.2,.9,.2,1)] ${isOpen ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="p-4 space-y-3">
+            <div
+              className={`transition-all duration-300 ${isOpen ? 'max-h-[75vh] opacity-100 overflow-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
+              <div className="p-2 space-y-1">
                 {navItems.map((item) => (
                   <div key={item.name}>
+                    {/* SIMPLE LINK - clean, borderless */}
                     {!item.hasDropdown ? (
-                      <Link href={item.href} className="block px-4 py-3 rounded-lg bg-slate-100/50 text-slate-800 font-medium text-[15px]" onClick={() => setIsOpen(false)}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="block px-4 py-3 rounded-md text-white/95 hover:bg-white/06 transition transform hover:translate-x-1"
+                      >
                         {item.name}
                       </Link>
                     ) : (
                       <>
-                        <button className="w-full px-4 py-3 rounded-lg bg-slate-100/40 flex justify-between items-center font-medium text-[15px]" onClick={() => toggleMobileDropdown(item.name)}>
-                          {item.name}
-                          <ChevronDown className={`transform transition-transform ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
+                        {/* FIRST LEVEL DROPDOWN BUTTON - clean */}
+                        <button
+                          onClick={() => toggleMobileDropdown(item.name)}
+                          className="w-full px-4 py-3 rounded-md text-white/95 flex justify-between items-center hover:bg-white/06 transition transform hover:translate-x-1"
+                        >
+                          <span>{item.name}</span>
+                          <ChevronDown className={`transition-transform ${openMobileDropdown === item.name ? "rotate-180" : ""}`} />
                         </button>
 
-                        <div className={`pl-4 overflow-hidden transition-all duration-250 ${openMobileDropdown === item.name ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                        {/* Dropdown panel - simple indentation, no card or border */}
+                        <div className={`pl-3 mt-1 transition-all overflow-hidden ${openMobileDropdown === item.name ? "max-h-[60vh] opacity-100" : "max-h-0 opacity-0"}`}>
                           {item.dropdownItems.map((dItem: AnyItem) => (
-                            <div key={dItem.name} className="pt-2">
+                            <div key={dItem.name} className="pt-1">
                               {!dItem.subDropdownItems ? (
-                                <Link href={dItem.href} className="block px-4 py-2 rounded-md bg-slate-100/30 text-[14px]" onClick={() => setIsOpen(false)}>
+                                <Link
+                                  href={dItem.href}
+                                  onClick={() => setIsOpen(false)}
+                                  className="block px-4 py-2 rounded-md text-white/90 hover:bg-white/06 transition transform hover:translate-x-1"
+                                >
                                   {dItem.name}
                                 </Link>
                               ) : (
                                 <>
-                                  <button className="w-full px-4 py-2 rounded-md bg-slate-100/20 flex justify-between items-center text-[14px]" onClick={() => toggleMobileSub(dItem.name)}>
-                                    {dItem.name}
-                                    <ChevronDown className={`transform transition-transform ${openMobileSub === dItem.name ? "rotate-180" : ""}`} />
+                                  {/* SECOND LEVEL BUTTON */}
+                                  <button
+                                    onClick={() => toggleMobileSub(dItem.name)}
+                                    className="w-full px-4 py-2 rounded-md text-white/90 flex justify-between items-center hover:bg-white/06 transition transform hover:translate-x-1"
+                                  >
+                                    <span>{dItem.name}</span>
+                                    <ChevronDown className={`transition-transform ${openMobileSub === dItem.name ? "rotate-180" : ""}`} />
                                   </button>
 
-                                  <div className={`pl-4 overflow-hidden transition-all duration-250 ${openMobileSub === dItem.name ? 'max-h-[720px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                  <div className={`pl-3 mt-1 transition-all overflow-hidden ${openMobileSub === dItem.name ? "max-h-[50vh] opacity-100" : "max-h-0 opacity-0"}`}>
                                     {dItem.subDropdownItems.map((sItem: AnyItem) => (
-                                      <div key={sItem.name} className="pt-2">
+                                      <div key={sItem.name} className="pt-1">
                                         {!sItem.subDropdownItems ? (
-                                          <Link href={sItem.href} className="block px-4 py-2 rounded-md bg-slate-100/10 text-[14px]" onClick={() => setIsOpen(false)}>
+                                          <Link
+                                            href={sItem.href}
+                                            onClick={() => setIsOpen(false)}
+                                            className="block px-3 py-2 rounded-md text-white/80 hover:bg-white/06 transition transform hover:translate-x-1"
+                                          >
                                             {sItem.name}
                                           </Link>
                                         ) : (
                                           <>
-                                            <button className="w-full px-4 py-2 rounded-md bg-slate-100/10 flex justify-between items-center text-[14px]" onClick={() => toggleMobileNested(`${item.name}:${dItem.name}:${sItem.name}`)}>
-                                              {sItem.name}
-                                              <ChevronDown className={`transform transition-transform ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "rotate-180" : ""}`} />
+                                            {/* THIRD LEVEL */}
+                                            <button
+                                              onClick={() => toggleMobileNested(`${item.name}:${dItem.name}:${sItem.name}`)}
+                                              className="w-full px-3 py-2 rounded-md text-white/80 flex justify-between items-center hover:bg-white/06 transition transform hover:translate-x-1"
+                                            >
+                                              <span>{sItem.name}</span>
+                                              <ChevronDown className={`transition-transform ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "rotate-180" : ""}`} />
                                             </button>
 
-                                            <div className={`pl-4 grid grid-cols-2 gap-2 pt-2 overflow-hidden transition-all duration-250 ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                            <div className={`pl-3 mt-1 grid grid-cols-2 gap-2 transition-all overflow-hidden ${openMobileNested === `${item.name}:${dItem.name}:${sItem.name}` ? "max-h-[45vh] opacity-100" : "max-h-0 opacity-0"}`}>
                                               {sItem.subDropdownItems.map((batch: AnyItem) => (
-                                                <Link key={batch.name} href={batch.href} className="block px-3 py-2 rounded-md bg-slate-100/10 text-center text-[14px]" onClick={() => setIsOpen(false)}>
+                                                <Link
+                                                  key={batch.name}
+                                                  href={batch.href}
+                                                  onClick={() => setIsOpen(false)}
+                                                  className="block px-3 py-2 rounded-md text-white text-center hover:bg-white/06 transition transform hover:translate-x-1"
+                                                >
                                                   {batch.name}
                                                 </Link>
                                               ))}
