@@ -32,7 +32,7 @@ const dummyFaculty: Faculty[] = [
         id: 3,
         name: "Prof. Anirban Sengupta",
         designation: "Professor",
-        education: "PhD, Ryerson University",
+        education: "PhD, Toronto Metropolitan University",
         specialization: "CAD-VLSI, EDA, High Level Synthesis, IP core Security, Hardware Trojan, Fault Security, Digital Watermark in digital chip, Optimization of Hardware Accelerators, Design Automation.",
         email: "anirban@iiti.ac.in",
         profileImagePath: "/facultypng/ProfAnirbanSengupta.jpg",
