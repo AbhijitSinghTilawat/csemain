@@ -183,7 +183,8 @@ export default function HomeNavbar() {
       dropdownItems: [
         { name: "Seminar & Outreach", href: "https://events.cse.iiti.ac.in/" },
         { name: "Placement Details", href: "/StudentCorner/PlacementDetails" }, 
-        { name: "Forms", href: "/StudentCorner/forms" } 
+        { name: "Forms", href: "/StudentCorner/forms" },
+        { name: "Student Association", href: "#" } 
       ]
     },
     { name: "How to reach", href: "/contact" }
