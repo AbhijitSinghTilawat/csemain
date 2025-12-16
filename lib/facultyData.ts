@@ -266,7 +266,7 @@ const dummyFaculty: Faculty[] = [
         email: "debasish@iiti.ac.in",
         profileImagePath: "/facultypng/Debasish.jpg",
         researchAreas: ["Software Architecture", "Agile", "Testing"],
-        profileUrl: "https://people.iiti.ac.in/~sidharth/",
+        profileUrl: "https://drdebmath.github.io/",
         contact: "+91-",
     },
 
