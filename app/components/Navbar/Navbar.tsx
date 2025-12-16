@@ -49,7 +49,6 @@ export default function HomeNavbar() {
       dropdownItems: [
         { name: "Faculty", href: "/people/faculty" },
         { name: "Staff", href: "/people/staff" },
-        { name: "Former Faculty", href: "/people/former-faculty" },
         {
           name: "BTech Students",
           href: "/people/btech-students",
@@ -68,7 +67,7 @@ export default function HomeNavbar() {
             { name: "2024", href: "/people/mtech-students/2024" }
           ]
         },
-        { name: "MS Students", href: "/people/ms-students" },
+        { name: "MS(Research) Students", href: "/people/ms-students" },
         { name: "PhD Students", href: "/people/phd-students" },
         {
           name: "Alumni",
@@ -96,7 +95,7 @@ export default function HomeNavbar() {
               name: "MTech",
               subDropdownItems: [{ name: "2023-25", href: "/people/alumni/mtech" }]
             },
-            { name: "MS", href: "/people/alumni/ms" },
+            { name: "MS(Research)", href: "/people/alumni/ms" },
             { name: "PhD", href: "/people/alumni/phd" }
           ]
         }
@@ -146,7 +145,7 @@ export default function HomeNavbar() {
       dropdownItems: [
         { name: "BTech", href: "/programs/btech" },
         { name: "MTech", href: "/programs/mtech" },
-        { name: "MS", href: "/programs/ms" },
+        { name: "MS(Research)", href: "/programs/ms" },
         { name: "PhD", href: "/programs/phd" }
       ]
     },
@@ -171,12 +170,22 @@ export default function HomeNavbar() {
         { name: "Prospective Faculty", href: "/join/faculty" },
         { name: "Prospective BTech Students", href: "/join/btech" },
         { name: "Prospective MTech Students", href: "/join/mtech" },
-        { name: "Prospective MS Students", href: "/join/ms" },
+        { name: "Prospective MS(Research) Students", href: "/join/ms" },
         { name: "Prospective PhD Students", href: "/join/phd" },
         { name: "Interns", href: "/join/interns" }
       ]
     },
-    { name: "Seminar & Outreach", href: "https://events.cse.iiti.ac.in/" },
+    // CHANGED: "Seminar & Outreach" -> "Student Corner" with dropdown items
+    {
+      name: "Student Corner",
+      href: "#",
+      hasDropdown: true,
+      dropdownItems: [
+        { name: "Seminar & Outreach", href: "https://events.cse.iiti.ac.in/" },
+        { name: "Placement Details", href: "/StudentCorner/PlacementDetails" }, 
+        { name: "Forms", href: "/StudentCorner/forms" } 
+      ]
+    },
     { name: "How to reach", href: "/contact" }
   ];
 
@@ -352,8 +361,8 @@ export default function HomeNavbar() {
                                     if (nested) {
                                       return (
                                         <div key={subItem.name} className="relative"
-                                             onMouseEnter={() => setActiveProgram(subItem.name)}
-                                             onMouseLeave={() => setActiveProgram(null)}
+                                          onMouseEnter={() => setActiveProgram(subItem.name)}
+                                          onMouseLeave={() => setActiveProgram(null)}
                                         >
                                           <div className="w-full flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 transition-all duration-200 font-medium text-sm">
                                             <span>{subItem.name}</span>

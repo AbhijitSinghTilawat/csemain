@@ -256,3 +256,66 @@
   opacity: 1;
   transform: translateY(0);
 }
+/* ==========================
+   MODERN SLIDER ANIMATIONS
+   ========================== */
+
+@keyframes slideFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subtleZoom {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Image animation */
+.slider-image {
+  animation: subtleZoom 900ms ease-out;
+}
+
+/* Caption animation */
+.slider-caption {
+  animation: slideFadeUp 700ms ease-out;
+}
+
+/* Controls glass effect */
+.slider-control {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Hover glow */
+.slider-glow:hover {
+  box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.35),
+              0 18px 45px rgba(15, 23, 42, 0.6);
+}
+
+/* Dots animation */
+.slider-dot {
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+.slider-dot-active {
+  transform: scale(1.35);
+  opacity: 1;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .slider-image,
+  .slider-caption {
+    animation: none;
+  }
+}

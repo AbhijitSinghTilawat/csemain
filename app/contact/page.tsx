@@ -51,76 +51,89 @@ const reachOptions = [
 export default function HowToReachPage() {
     return (
         <div className="bg-gray-50 py-12">
-            <div className="w-full px-2 sm:px-4">
+            <div className="w-full px-4 sm:px-6 lg:px-8">
 
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-blue-900 mb-12 text-center">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-900 mb-12 text-center">
                     How To Reach?
                 </h1>
 
-                {/* Responsive grid: 1 column on xs, 2 on sm, 3 on md, 4 on lg+ */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 items-stretch">
+                {/* Responsive grid: 1 col (xs), 2 cols (sm), 3 cols (md), 4 cols (lg+) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 items-stretch">
 
                     {reachOptions.map((option, index) => (
                         <article
                             key={index}
-                            className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-2xl transition-transform transform hover:-translate-y-1"
+                            className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                             aria-labelledby={`reach-${index}-title`}
                         >
-
-                            <header className="bg-gradient-to-r from-blue-800 to-blue-700 text-white p-6">
-                                <h2 id={`reach-${index}-title`} className="text-xl sm:text-2xl font-extrabold text-center leading-tight">
+                            {/* Header */}
+                            <header className="bg-gradient-to-r from-blue-800 to-blue-600 text-white p-5">
+                                <h2 id={`reach-${index}-title`} className="text-lg sm:text-xl font-bold text-center leading-tight">
                                     {option.title}
                                 </h2>
                             </header>
 
-
-                            <div className="p-6 sm:p-8 space-y-4 flex-grow flex flex-col">
-                                <p className="text-gray-700 text-sm sm:text-base">
-                                    <strong className="font-semibold text-gray-900">Distance:</strong> {option.distance} <span className="mx-2">•</span> <strong className="font-semibold text-gray-900">Travel time:</strong> {option.time}
+                            {/* Body Content */}
+                            <div className="p-5 sm:p-6 space-y-4 flex-grow flex flex-col text-sm sm:text-base text-gray-700">
+                                <p>
+                                    <strong className="font-semibold text-gray-900">Distance:</strong> {option.distance}
+                                    <br className="hidden sm:block" />
+                                    <span className="sm:hidden mx-2">•</span>
+                                    <strong className="font-semibold text-gray-900">Time:</strong> {option.time}
                                 </p>
 
-                                <ul className="list-disc list-inside space-y-2 text-gray-800 text-sm sm:text-base">
+                                <ul className="list-disc list-inside space-y-2 text-gray-600">
                                     {option.options.map((item, i) => (
                                         <li key={i}>{item}</li>
                                     ))}
                                 </ul>
 
-                                <p className="text-gray-700 mt-2 text-sm sm:text-base">
+                                <p className="mt-2">
                                     <strong className="font-semibold text-gray-900">Note:</strong> {option.note}
                                 </p>
 
-                                {/* Push map section to bottom so content flows and cards have consistent height */}
+                                {/* Spacer to push map to bottom */}
                                 <div className="mt-auto" />
                             </div>
 
-
+                            {/* Map Image Section */}
                             <div className="p-4 bg-gray-50 border-t border-gray-100">
                                 <a
                                     href={option.mapLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={`Open map for ${option.title}`}
+                                    className="block group"
                                 >
-                                    {/* Next/Image - make image responsive and cropped to a consistent height */}
-                                    <div className="w-full h-48 relative rounded-md overflow-hidden">
+                                    {/* FIX: Changed aspect ratio to 'aspect-[4/3]' (taller box) 
+                                        to allow the map to be bigger.
+                                        
+                                        Using 'object-cover' ensures it fills the box completely.
+                                        Because the box is now taller, less vertical cropping will occur.
+                                    */}
+                                    <div className="w-full relative aspect-[4/3] rounded-lg overflow-hidden shadow-sm border border-gray-200 bg-gray-100 group-hover:border-blue-400 transition-colors">
                                         <Image
                                             src={option.mapImage}
                                             alt={`Map for ${option.title}`}
                                             fill
-                                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                            style={{ objectFit: 'cover' }}
-                                            className="block"
+                                            // Using cover now that the container is taller
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                                         />
+                                        
+                                        {/* Optional: 'Click to open' overlay on hover */}
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center pointer-events-none">
+                                            <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-blue-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm transition-opacity duration-300">
+                                                Open Map
+                                            </span>
+                                        </div>
                                     </div>
-
                                 </a>
-
                             </div>
                         </article>
                     ))}
 
                 </div>
-
             </div>
         </div>
     );

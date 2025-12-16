@@ -1,13 +1,10 @@
 // app/page.tsx (or pages/index.tsx)
-// Full updated Home page with super-smooth looping vertical auto-scroll for panels
-// Requires: lucide-react, embla-carousel-react, react-fast-marquee, embla-carousel-autoplay
-
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { ChevronRight, ChevronLeft } from "lucide-react"; // Added ChevronLeft
 
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -16,10 +13,40 @@ import Marquee from "react-fast-marquee";
 import { newsItems, eventItems, recruitmentItems, marqueeItems } from "../lib/content";
 
 export default function Home() {
-  const [emblaRef] = useEmblaCarousel(
+  // Embla setup with API access
+  const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start" },
-    [Autoplay({ delay: 4000 })]
+    [Autoplay({ delay: 4000, stopOnInteraction: false })] // stopOnInteraction: false keeps it running after click if desired
   );
+
+  // State for dots and navigation
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  // Update state when slider moves
+  const onSelect = useCallback((api: any) => {
+    setSelectedIndex(api.selectedScrollSnap());
+  }, []);
+
+  // Initialize dots
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    setScrollSnaps(emblaApi.scrollSnapList());
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    onSelect(emblaApi); // Initial call
+
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  // Button Handlers
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi]);
 
   const slides = [
     { imgSrc: "/sliderimage/1.png", title: "13th Convocation" },
@@ -205,28 +232,32 @@ export default function Home() {
         <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-12">
           <Marquee speed={55} pauseOnHover gradient={false}>
             {marqueeItems.map((item) => {
-              const itemClasses = `mx-6 sm:mx-10 md:mx-16 text-[clamp(0.8rem,1.4vw,1rem)] tracking-wide ${
-                item.isStrong ? "font-semibold" : "font-normal opacity-85"
-              }`;
-              const hasHref =
-                "href" in item && typeof (item as any).href === "string";
-              if (hasHref) {
-                return (
-                  <Link
-                    key={item.id}
-                    href={(item as any).href}
-                    className={`${itemClasses} hover:text-blue-300 transition-colors duration-200`}
-                  >
-                    {item.text}
-                  </Link>
-                );
-              }
-              return (
-                <span key={item.id} className={itemClasses}>
-                  {item.text}
-                </span>
-              );
-            })}
+  const itemClasses = `mx-6 sm:mx-10 md:mx-16 text-[clamp(0.8rem,1.4vw,1rem)] tracking-wide ${
+    item.isStrong ? "font-semibold" : "font-normal opacity-85"
+  }`;
+
+  // CHANGE 1: Check for "link" instead of "href"
+  const hasLink = "link" in item && typeof (item as any).link === "string";
+
+  if (hasLink) {
+    return (
+      <Link
+        key={item.id}
+        // CHANGE 2: Use item.link here
+        href={(item as any).link} 
+        className={`${itemClasses} hover:text-blue-300 transition-colors duration-200 cursor-pointer`}
+      >
+        {item.text}
+      </Link>
+    );
+  }
+
+  return (
+    <span key={item.id} className={itemClasses}>
+      {item.text}
+    </span>
+  );
+})}
           </Marquee>
         </div>
       </div>
@@ -244,31 +275,70 @@ export default function Home() {
               </p>
             </div>
 
-            <div
-              className="overflow-hidden rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50"
-              ref={emblaRef}
-            >
-              <div className="flex">
-                {slides.map((slide, index) => (
-                  <div className="min-w-full flex-none" key={index}>
-                    {/* Image fully visible, responsive height */}
-                    <div className="relative w-full h-[40vh] sm:h-[45vh] md:h-[55vh] lg:h-[60vh] xl:h-[65vh] max-h-[780px] min-h-[220px] bg-slate-900/30 dark:bg-black/30 rounded-2xl overflow-hidden flex items-center justify-center">
-                      <Image
-                        src={slide.imgSrc}
-                        alt={slide.title}
-                        fill
-                        priority={index === 0}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px"
-                        className="rounded-2xl object-contain"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-2xl pointer-events-none" />
-                      <div className="absolute left-4 right-4 bottom-4 text-white">
-                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold drop-shadow">
-                          {slide.title}
-                        </h3>
+            {/* Slider Container Wrapper with 'group' for hover effects */}
+            <div className="relative group w-full mx-auto">
+              <div
+                className="overflow-hidden rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+                ref={emblaRef}
+              >
+                <div className="flex">
+                  {slides.map((slide, index) => (
+                    <div className="min-w-full flex-none" key={index}>
+                      {/* Image fully visible, responsive height */}
+                      <div className="relative w-full h-[40vh] sm:h-[45vh] md:h-[55vh] lg:h-[60vh] xl:h-[65vh] max-h-[780px] min-h-[220px] bg-slate-900/30 dark:bg-black/30 rounded-2xl overflow-hidden flex items-center justify-center">
+                        <Image
+                          src={slide.imgSrc}
+                          alt={slide.title}
+                          fill
+                          priority={index === 0}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px"
+                          className="rounded-2xl object-contain"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-2xl pointer-events-none" />
+                        <div className="absolute left-4 right-4 bottom-12 sm:bottom-14 md:bottom-16 text-white text-center pb-2">
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold drop-shadow-md">
+                            {slide.title}
+                          </h3>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* --- NAVIGATION CONTROLS (Show on Hover) --- */}
+
+              {/* Previous Button */}
+              <button
+                onClick={scrollPrev}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 sm:p-3 rounded-full bg-black/30 hover:bg-black/60 backdrop-blur-sm text-white border border-white/10 transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 focus:outline-none"
+                aria-label="Previous Slide"
+              >
+                <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
+              </button>
+
+              {/* Next Button */}
+              <button
+                onClick={scrollNext}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 sm:p-3 rounded-full bg-black/30 hover:bg-black/60 backdrop-blur-sm text-white border border-white/10 transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 focus:outline-none"
+                aria-label="Next Slide"
+              >
+                <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
+              </button>
+
+              {/* Pagination Dots */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {scrollSnaps.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => scrollTo(index)}
+                    className={`transition-all duration-300 rounded-full focus:outline-none ${
+                      index === selectedIndex
+                        ? "w-8 h-2.5 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+                        : "w-2.5 h-2.5 bg-white/50 hover:bg-white/80"
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
                 ))}
               </div>
             </div>
@@ -342,7 +412,7 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
               <div className="flex flex-col bg-white dark:bg-slate-800/60 shadow-2xl rounded-2xl p-6 md:p-8 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 hover:shadow-blue-500/10 hover:border-blue-500/50 h-full">
                 <h3 className="text-[clamp(1rem,1.6vw,1.5rem)] font-bold mb-3 text-blue-700 dark:text-blue-300">
-                  B.TECH
+                  B.TECH.
                 </h3>
                 <p className="text-[clamp(0.9rem,1.2vw,1rem)] text-gray-600 dark:text-gray-300 mb-4 flex-grow">
                   The B.Tech. Program in Computer Science And Engineering is a four-year
@@ -358,7 +428,7 @@ export default function Home() {
 
               <div className="flex flex-col bg-white dark:bg-slate-800/60 shadow-2xl rounded-2xl p-6 md:p-8 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 hover:shadow-blue-500/10 hover:border-blue-500/50 h-full">
                 <h3 className="text-[clamp(1rem,1.6vw,1.5rem)] font-bold mb-3 text-blue-700 dark:text-blue-300">
-                  M.TECH
+                  M.TECH.
                 </h3>
                 <p className="text-[clamp(0.9rem,1.2vw,1rem)] text-gray-600 dark:text-gray-300 mb-4 flex-grow">
                   The MTech program at IIT Indore offers advanced, research-focused
@@ -375,7 +445,7 @@ export default function Home() {
 
               <div className="flex flex-col bg-white dark:bg-slate-800/60 shadow-2xl rounded-2xl p-6 md:p-8 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 hover:shadow-blue-500/10 hover:border-blue-500/50 h-full">
                 <h3 className="text-[clamp(1rem,1.6vw,1.5rem)] font-bold mb-3 text-blue-700 dark:text-blue-300">
-                  MS
+                  MS(Research )
                 </h3>
                 <p className="text-[clamp(0.9rem,1.2vw,1rem)] text-gray-600 dark:text-gray-300 mb-4 flex-grow">
                   MS Research program of the Department of Computer Science and

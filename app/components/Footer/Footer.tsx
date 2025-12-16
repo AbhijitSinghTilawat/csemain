@@ -88,7 +88,7 @@ export default function Footer() {
 
             <ul className="space-y-3 text-sm">
               {[
-                { href: "/people/faculty", label: "Faculty & Staff" },
+                { href: "/people/faculty", label: "Faculty And Staff" },
                 { href: "/research/areas", label: "Research" },
                 { href: "/about/contact", label: "Contact Us" },
               ].map((l) => (
@@ -116,7 +116,7 @@ export default function Footer() {
               {[
                 { href: "/programs/btech", label: "B.Tech" },
                 { href: "/programs/mtech", label: "M.Tech" },
-                { href: "/programs/ms", label: "M.S" },
+                { href: "/programs/ms", label: "M.S(Research)" },
                 { href: "/programs/phd", label: "Ph.D" },
                 { href: "/teaching/courses", label: "Course Catalog" },
               ].map((l) => (

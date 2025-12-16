@@ -1,7 +1,15 @@
 import { getFacultyMembers } from "@/lib/facultyData";
+import { getFormerFacultyMembers } from "@/lib/formerFacultyData";
 
 export default async function FacultyPage() {
-    const facultyMembers = await getFacultyMembers();
+    // Fetch both datasets in parallel for better performance
+    const facultyDataPromise = getFacultyMembers();
+    const formerFacultyDataPromise = getFormerFacultyMembers();
+
+    const [facultyMembers, formerFacultyMembers] = await Promise.all([
+        facultyDataPromise,
+        formerFacultyDataPromise,
+    ]);
 
     // ---------------- HOD DATA ----------------
     const headOfDepartment = {
@@ -19,7 +27,7 @@ export default async function FacultyPage() {
     return (
         <div className="bg-gray-50 w-full px-2 sm:px-4 py-10 min-h-screen">
 
-            {/* -------------------- HOD SECTION -------------------- */}
+            {/* ==================== HOD SECTION ==================== */}
             <h1 className="text-4xl font-extrabold text-gray-900 border-b-4 border-indigo-600 pb-2 mb-10 text-center">
                 Head of Department
             </h1>
@@ -81,14 +89,12 @@ export default async function FacultyPage() {
                 </div>
             </div>
 
-            {/* -------------------- FACULTY SECTION -------------------- */}
+            {/* ==================== CURRENT FACULTY SECTION ==================== */}
             <h1 className="text-4xl font-extrabold text-gray-900 border-b-4 border-indigo-600 pb-2 mb-10 text-center">
                 Faculty Members
             </h1>
 
-            {/* Full-width grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 w-full">
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 w-full mb-20">
                 {facultyMembers.map((member) => (
                     <div
                         key={member.id}
@@ -106,7 +112,7 @@ export default async function FacultyPage() {
                             className="w-24 h-24 rounded-full mb-5 object-cover border-4 border-indigo-200"
                         />
 
-                        {/* NAME + (on lien) */}
+                        {/* NAME */}
                         <h2 className="text-xl font-bold text-indigo-700 mb-1">
                             {member.name.includes("(on lien)") ? (
                                 <>
@@ -155,19 +161,72 @@ export default async function FacultyPage() {
                             </p>
                         </div>
 
-                        {/* BUTTON — fixed at bottom */}
+                        {/* BUTTON */}
                         <a
                             href={member.profileUrl || "#"}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-auto bg-indigo-500 text-white py-1.5 px-4 rounded-lg 
-                                       hover:bg-indigo-600 transition text-sm"
+                                     hover:bg-indigo-600 transition text-sm"
                         >
                             View Full Profile
                         </a>
                     </div>
                 ))}
+            </div>
 
+            {/* ==================== FORMER FACULTY SECTION ==================== */}
+            <h1 className="text-4xl font-extrabold text-gray-900 border-b-4 border-indigo-600 pb-2 mb-10 text-center">
+                Former Faculty Members
+            </h1>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
+                {formerFacultyMembers.map((member) => (
+                    <div
+                        key={member.id}
+                        className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl 
+                                   transition duration-500 transform hover:scale-[1.02] 
+                                   flex flex-col items-center text-center"
+                    >
+                        <img
+                            src={
+                                member.profileImagePath ||
+                                "https://placehold.co/150x150/cccccc/000000?text=NA"
+                            }
+                            alt={member.name}
+                            className="w-24 h-24 rounded-full mb-4 object-cover border-4 border-indigo-200"
+                        />
+
+                        <h2 className="text-xl font-bold text-indigo-700 mb-1">
+                            {member.name}
+                        </h2>
+                        
+                        <p className="text-md font-semibold text-gray-600 mb-4">
+                            {member.designation}
+                        </p>
+
+                        <div className="space-y-2 w-full text-sm mb-4">
+                            <p className="text-gray-800">
+                                <span className="font-medium">Duration:</span>{" "}
+                                {member.duration}
+                            </p>
+                            <p className="text-gray-800">
+                                <span className="font-medium">Contact No.:</span>{" "}
+                                {member.contactNo || "N/A"}
+                            </p>
+                        </div>
+
+                        <a
+                            href={member.readMoreUrl || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-auto bg-indigo-500 text-white py-2 px-4 rounded-lg 
+                                     hover:bg-indigo-600 transition duration-300 text-sm"
+                        >
+                            Read More
+                        </a>
+                    </div>
+                ))}
             </div>
         </div>
     );

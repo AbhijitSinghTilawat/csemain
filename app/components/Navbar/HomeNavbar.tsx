@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Menu, X, ChevronDown, ExternalLink, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 
 type AnyItem = any;
 
@@ -23,7 +23,7 @@ export default function HomeNavbar() {
 
   // ---- Hover hide-delay logic ----
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const HIDE_DELAY_MS = 300; // increased to 300ms for nested menus
+  const HIDE_DELAY_MS = 300; 
 
   const clearHideTimer = () => {
     if (hideTimerRef.current) {
@@ -68,7 +68,6 @@ export default function HomeNavbar() {
       dropdownItems: [
         { name: "Faculty", href: "/people/faculty" },
         { name: "Staff", href: "/people/staff" },
-        { name: "Former Faculty", href: "/people/former-faculty" },
         {
           name: "BTech Students",
           href: "/people/btech-students",
@@ -87,7 +86,7 @@ export default function HomeNavbar() {
             { name: "2024", href: "/people/mtech-students/2024" }
           ]
         },
-        { name: "MS Students", href: "/people/ms-students" },
+        { name: "MS(Research) Students", href: "/people/ms-students" },
         { name: "PhD Students", href: "/people/phd-students" },
 
         // Alumni with nested items
@@ -117,7 +116,7 @@ export default function HomeNavbar() {
               name: "MTech",
               subDropdownItems: [{ name: "2023-25", href: "/people/alumni/mtech" }]
             },
-            { name: "MS", href: "/people/alumni/ms" },
+            { name: "MS(Research)", href: "/people/alumni/ms" },
             { name: "PhD", href: "/people/alumni/phd" }
           ]
         }
@@ -168,7 +167,7 @@ export default function HomeNavbar() {
       dropdownItems: [
         { name: "BTech", href: "/programs/btech" },
         { name: "MTech", href: "/programs/mtech" },
-        { name: "MS", href: "/programs/ms" },
+        { name: "MS(Research)", href: "/programs/ms" },
         { name: "PhD", href: "/programs/phd" }
       ]
     },
@@ -193,13 +192,23 @@ export default function HomeNavbar() {
         { name: "Prospective Faculty", href: "/join/faculty" },
         { name: "Prospective BTech Students", href: "/join/btech" },
         { name: "Prospective MTech Students", href: "/join/mtech" },
-        { name: "Prospective MS Students", href: "/join/ms" },
+        { name: "Prospective MS(Research) Students", href: "/join/ms" },
         { name: "Prospective PhD Students", href: "/join/phd" },
         { name: "Interns", href: "/join/interns" }
       ]
     },
 
-    { name: "Seminar & Outreach", href: "https://events.cse.iiti.ac.in/" },
+    // CHANGED: "Seminar & Outreach" -> "Student Corner" with dropdown
+    {
+      name: "Student Corner",
+      hasDropdown: true,
+      dropdownItems: [
+        { name: "Seminar & Outreach", href: "https://events.cse.iiti.ac.in/" },
+        { name: "Placement Details", href: "/StudentCorner/PlacementDetails" }, 
+        { name: "Forms", href: "/StudentCorner/forms" } 
+      ]
+    },
+
     { name: "How to reach", href: "/contact" }
   ];
 
@@ -222,7 +231,7 @@ export default function HomeNavbar() {
           <div className="w-full">
             <div className="text-center">
               <div className="flex justify-center mb-6">
-                <div className="w-[clamp(96px,12vw,220px)]">
+                <div className="w-[clamp(96px,12vw,220px)] aspect-square">
                   <Image
                     src="/png/cselogo.png"
                     alt="CSE Department Logo"
@@ -270,10 +279,17 @@ export default function HomeNavbar() {
             <div className="flex w-full flex-wrap">
               {navItems.map((item) => {
                 const isActive = activeDropdown === item.name;
+
+                // CHANGED: prevent wrap logic now checks for "Student Corner" if desired,
+                // or you can leave it if "Student Corner" fits.
+                const preventWrap = item.name === "Student Corner";
+
                 return (
                   <div
                     key={item.name}
                     className="relative flex-1 min-w-[120px] text-center"
+                    // apply a larger min-width inline when needed so other items keep their layout
+                    style={preventWrap ? { minWidth: "160px" } : undefined}
                     onMouseEnter={() => {
                       clearHideTimer();
                       setActiveDropdown(item.name);
@@ -288,7 +304,7 @@ export default function HomeNavbar() {
                           className={`w-full px-4 py-3 font-medium text-[15px] md:text-base rounded-md transition-colors hover:bg-blue-700/40 focus:outline-none flex items-center justify-center gap-2 ${isActive ? "text-sky-300" : "text-white"}`}
                           onClick={(e) => item.hasDropdown && e.preventDefault()}
                         >
-                          <span>{item.name}</span>
+                          <span className={preventWrap ? "whitespace-nowrap" : ""}>{item.name}</span>
                           {item.hasDropdown && <ChevronDown size={14} />}
                         </button>
                       ) : (
@@ -296,7 +312,7 @@ export default function HomeNavbar() {
                           href={item.href}
                           target={typeof item.href === "string" && item.href.startsWith("http") ? "_blank" : undefined}
                           rel={typeof item.href === "string" && item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                          className="inline-block w-full px-4 py-3 font-medium text-[15px] md:text-base rounded-md hover:bg-white/6 transition-colors text-white text-center"
+                          className={`inline-block w-full px-4 py-3 font-medium text-[15px] md:text-base rounded-md hover:bg-white/6 transition-colors text-white text-center ${preventWrap ? "whitespace-nowrap" : ""}`}
                           onMouseEnter={() => clearHideTimer()}
                           onMouseLeave={() => scheduleHideAll()}
                           onClick={() => {
@@ -554,7 +570,7 @@ export default function HomeNavbar() {
                                           </>
                                         )}
                                       </div>
-                                    ))}
+                                    ))} 
                                   </div>
                                 </>
                               )}
