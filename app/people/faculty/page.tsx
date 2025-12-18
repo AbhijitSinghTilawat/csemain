@@ -109,7 +109,7 @@ export default async function FacultyPage() {
                                 "https://placehold.co/150x150/cccccc/000000?text=NA"
                             }
                             alt={member.name}
-                            className="w-24 h-24 rounded-full mb-5 object-cover border-4 border-indigo-200"
+                            className="w-24 h-24 rounded-full mb-5 object-contain border-4 border-indigo-200"
                         />
 
                         {/* NAME */}
@@ -194,7 +194,7 @@ export default async function FacultyPage() {
                                 "https://placehold.co/150x150/cccccc/000000?text=NA"
                             }
                             alt={member.name}
-                            className="w-24 h-24 rounded-full mb-4 object-cover border-4 border-indigo-200"
+                            className="w-24 h-24 rounded-full mb-4 object-contain border-4 border-indigo-200"
                         />
 
                         <h2 className="text-xl font-bold text-indigo-700 mb-1">

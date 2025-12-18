@@ -348,11 +348,12 @@ export default function Home() {
 
       {/* ABOUT CSE Section */}
       <section className="bg-transparent border-t border-gray-200 dark:border-gray-700/50">
+      <div className="w-full px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-12">
         <div
           ref={aboutRef}
-          className="about-card w-full mx-auto text-center pb-10"
+          className="about-card w-full mx-auto text-left justify pb-10 px-4"
         >
-          <h2 className="text-[clamp(1.25rem,2.8vw,2.5rem)] font-bold text-gray-900 dark:text-white mb-6 pt-10">
+          <h2 className="text-[clamp(1.25rem,2.8vw,2.5rem)] font-bold text-gray-900 dark:text-white mb-6 pt-10 text-center">
             ABOUT CSE
           </h2>
 
@@ -379,7 +380,7 @@ export default function Home() {
             industry–academia partnerships.
           </p>
 
-          <h3 className="text-[clamp(1.25rem,2.8vw,2rem)] font-bold text-gray-900 dark:text-white mb-4">
+          <h3 className="text-[clamp(1.25rem,2.8vw,2rem)] font-bold text-gray-900 dark:text-white mb-4 text-center">
             Vision and Mission
           </h3>
 
@@ -392,10 +393,11 @@ export default function Home() {
             facilitate its steady progress in this direction.
           </p>
 
-          <p className="text-[clamp(0.9rem,1.2vw,1.05rem)] text-gray-700 dark:text-gray-300 leading-relaxed max-w-5xl mx-auto">
+          <p className="text-[clamp(0.9rem,1.2vw,1.05rem)] text-gray-700 dark:text-gray-300 leading-relaxed max-w-9xl mx-auto mb-4">
             <strong>Mission:</strong> To stay ahead of the curve in the use and
             dissemination of knowledge on evolving technologies.
           </p>
+        </div>
         </div>
       </section>
 
@@ -487,7 +489,7 @@ export default function Home() {
             <div className="flex flex-col">
               <div className="bg-blue-900 text-white p-3 rounded-t-lg shadow-lg">
                 <h3 className="text-sm md:text-lg font-bold tracking-wide">
-                  NEWS (2025)
+                  NEWS
                 </h3>
               </div>
 
