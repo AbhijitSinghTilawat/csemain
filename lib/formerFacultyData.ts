@@ -11,6 +11,27 @@ const dummyFormerFaculty: FormerFaculty[] = [
         profileImagePath: "/formerfacultypng/nsc.jpg", // 👈 पाथ बदलें
         readMoreUrl: "https://people.iiti.ac.in/~narendra/", // 👈 यहाँ असली लिंक डालें
     },
+
+        {
+        id: 6,
+        name: "Prof.Subhrangsu Mandal",
+        designation: "Assistant Professor",
+        duration: "2022-2023",
+        contactNo: "", // इमेज में खाली है
+        profileImagePath: "/formerfacultypng/Subhrangsu Mandal.jpg", // 👈 पाथ बदलें
+        readMoreUrl: "https://www.iitism.ac.in/faculty-details?faculty=subhrangsu", // 👈 यहाँ असली लिंक डालें
+    },
+    // ... (आप यहाँ और सदस्यों को जोड़ सकते हैं)
+    {
+        id: 5,
+        name: "Dr. Pramod Ganapathi",
+        designation: "Assistant Professor",
+        duration: "2018-2019",
+        contactNo: "", // इमेज में खाली है
+        profileImagePath: "/formerfacultypng/Dr. Pramod_Ganapathi.jpg", // 👈 पाथ बदलें
+        readMoreUrl: "https://www3.cs.stonybrook.edu/~pramod.ganapathi/", // 👈 यहाँ असली लिंक डालें
+    },
+    
     {
         id: 2,
         name: "Dr. Monalisa Sarma",
@@ -38,27 +59,10 @@ const dummyFormerFaculty: FormerFaculty[] = [
         contactNo: "", // इमेज में खाली है
         profileImagePath: "/formerfacultypng/Tanima.jpeg", // 👈 पाथ बदलें
         readMoreUrl: "https://iitbhu.ac.in/dept/cse/people/tanimacse", // 👈 यहाँ असली लिंक डालें
-    },
-    {
-        id: 5,
-        name: "Dr. Pramod Ganapathi",
-        designation: "Assistant Professor",
-        duration: "2018-2019",
-        contactNo: "", // इमेज में खाली है
-        profileImagePath: "/formerfacultypng/Dr. Pramod_Ganapathi.jpg", // 👈 पाथ बदलें
-        readMoreUrl: "https://www3.cs.stonybrook.edu/~pramod.ganapathi/", // 👈 यहाँ असली लिंक डालें
-    },
+    }
+    
 
-    {
-        id: 6,
-        name: "Prof.Subhrangsu Mandal",
-        designation: "Assistant Professor",
-        duration: "2022-2023",
-        contactNo: "", // इमेज में खाली है
-        profileImagePath: "/formerfacultypng/Subhrangsu Mandal.jpg", // 👈 पाथ बदलें
-        readMoreUrl: "https://www.iitism.ac.in/faculty-details?faculty=subhrangsu", // 👈 यहाँ असली लिंक डालें
-    },
-    // ... (आप यहाँ और सदस्यों को जोड़ सकते हैं)
+
 ];
 
 /**
